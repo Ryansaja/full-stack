@@ -15,16 +15,18 @@ const app = express();
 function isAllowedOrigin(origin) {
   if (!origin || origin === 'null') return true;
 
+  const normalizedOrigin = String(origin).replace(/\/+$/, '');
   const explicit = String(process.env.ALLOWED_ORIGINS || '')
     .split(',')
     .map((item) => item.trim())
     .filter(Boolean);
 
-  if (explicit.includes(origin.replace(/\/+$/, ''))) return true;
+  if (explicit.includes(normalizedOrigin)) return true;
 
   try {
-    const parsed = new URL(origin);
+    const parsed = new URL(normalizedOrigin);
     if (parsed.hostname === 'localhost' || parsed.hostname === '127.0.0.1') return true;
+    if (/\.netlify\.app$/i.test(parsed.hostname)) return true;
   } catch (error) {
     return false;
   }
