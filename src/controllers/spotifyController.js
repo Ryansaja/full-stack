@@ -38,13 +38,14 @@ exports.searchTracks = async (req, res) => {
   try {
     const query = sanitizeText(req.query.q, { maxLength: 120 });
     const limit = Math.min(Math.max(Number(req.query.limit || 10), 1), 10);
+    const market = sanitizeText(req.query.market || process.env.SPOTIFY_MARKET || 'ID', { maxLength: 2 }).toUpperCase();
     if (!query) {
       return res.status(400).json({ message: 'Search query is required.' });
     }
 
     const token = await getAccessToken();
     const response = await axios.get('https://api.spotify.com/v1/search', {
-      params: { q: query, type: 'track', limit },
+      params: { q: query, type: 'track', limit, market },
       headers: { Authorization: `Bearer ${token}` },
       timeout: 10_000
     });
