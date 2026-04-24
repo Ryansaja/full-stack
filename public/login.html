@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PAVED Admin Login</title>
+    <link rel="icon" type="image/png" href="assets/Branch.png">
+    <link rel="stylesheet" href="assets/output.css">
+    <script src="assets/config.js"></script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background:
+                radial-gradient(circle at top, rgba(24, 235, 154, 0.12), transparent 40%),
+                linear-gradient(180deg, #050505 0%, #111111 100%);
+        }
+    </style>
+</head>
+<body class="min-h-screen text-white flex items-center justify-center p-6">
+    <main class="w-full max-w-md bg-white/5 border border-white/10 rounded-[2rem] p-8 md:p-10 backdrop-blur-2xl shadow-2xl">
+        <div class="mb-8">
+            <p class="text-[10px] uppercase tracking-[0.35em] text-[#18eb9a] font-black mb-3">Admin Access</p>
+            <h1 class="text-3xl md:text-4xl font-black tracking-tight uppercase">Secure Login</h1>
+            <p class="text-sm text-white/60 mt-3">Masuk dulu sebelum membuka dashboard admin.</p>
+        </div>
+
+        <form id="loginForm" class="space-y-5">
+            <label class="block">
+                <span class="text-[10px] uppercase tracking-[0.3em] text-white/40 font-black">Username</span>
+                <input id="username" type="text" autocomplete="username" class="mt-2 w-full rounded-2xl bg-black/30 border border-white/10 px-4 py-3 outline-none focus:border-[#18eb9a]" required>
+            </label>
+
+            <label class="block">
+                <span class="text-[10px] uppercase tracking-[0.3em] text-white/40 font-black">Password</span>
+                <input id="password" type="password" autocomplete="current-password" class="mt-2 w-full rounded-2xl bg-black/30 border border-white/10 px-4 py-3 outline-none focus:border-[#18eb9a]" required>
+            </label>
+
+            <p id="loginError" class="hidden text-sm text-red-300"></p>
+
+            <button type="submit" class="w-full rounded-2xl bg-[#18eb9a] text-black py-4 font-black uppercase tracking-[0.25em] hover:brightness-110 transition">
+                Masuk
+            </button>
+        </form>
+    </main>
+
+    <script>
+        (function () {
+            function getAdminToken() {
+                const sessionToken = sessionStorage.getItem('token');
+                if (sessionToken) return sessionToken;
+
+                const legacyToken = localStorage.getItem('token');
+                const legacyAdmin = localStorage.getItem('admin');
+                if (legacyToken) {
+                    sessionStorage.setItem('token', legacyToken);
+                    if (legacyAdmin) sessionStorage.setItem('admin', legacyAdmin);
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('admin');
+                    return legacyToken;
+                }
+
+                return '';
+            }
+
+            function nextPath() {
+                try {
+                    return new URLSearchParams(window.location.search).get('next') || '/admin';
+                } catch (e) {
+                    return '/admin';
+                }
+            }
+
+            if (getAdminToken()) {
+                window.location.replace(nextPath());
+            }
+
+            const form = document.getElementById('loginForm');
+            const errorEl = document.getElementById('loginError');
+
+            form.addEventListener('submit', async function (event) {
+                event.preventDefault();
+                errorEl.classList.add('hidden');
+                errorEl.textContent = '';
+
+                const username = document.getElementById('username').value.trim();
+                const password = document.getElementById('password').value;
+                const base = String(window.API_BASE_URL || '').replace(/\/+$/, '');
+
+                try {
+                    const res = await fetch(base + '/api/auth/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username: username, password: password })
+                    });
+
+                    const payload = await res.json().catch(function () { return {}; });
+                    if (!res.ok) {
+                        throw new Error(payload.message || res.statusText || 'Login failed');
+                    }
+
+                    sessionStorage.setItem('token', payload.token);
+                    if (payload.admin) {
+                        sessionStorage.setItem('admin', JSON.stringify(payload.admin));
+                    }
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('admin');
+                    window.location.replace(nextPath());
+                } catch (error) {
+                    errorEl.textContent = error.message || 'Login failed';
+                    errorEl.classList.remove('hidden');
+                }
+            });
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom base styles if any */
+body {
+    transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+/* Nav Link Animation */
+.nav-link { position: relative; transition: color 0.3s ease; }
+.nav-link::after { 
+    content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px; 
+    background: #18eb9a; transition: width 0.3s ease; 
+}
+.nav-link:hover::after { width: 100%; }
+.nav-link:hover { color: #18eb9a; }
+
+/* Utility */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+#sidebarPanel { transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+.menu-item { transition: all 0.3s ease; }
+.menu-item:hover { padding-left: 10px; color: #18eb9a; }
+
+/* Modified Grid for Editorial Style */
+.uss-grid-layout { display: grid; grid-template-columns: 1fr; gap: 3rem; }
+@media (min-width: 1024px) { .uss-grid-layout { grid-template-columns: 8fr 4fr; } }
+
+/* Invert logo in Light Mode */
+html.light .invert-img { filter: invert(1); }
+
+/* Form Specific Styles */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 2.5rem;
+}
+html.light .glass-panel {
+    background: rgba(0, 0, 0, 0.02);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.custom-input {
+    background: rgba(125, 125, 125, 0.05);
+    border: 1px solid rgba(125, 125, 125, 0.1);
+    border-radius: 1.2rem;
+    padding: 1.1rem 1.4rem;
+    width: 100%;
+    outline: none;
+    transition: all 0.3s ease;
+}
+.custom-input:focus {
+    border-color: #18eb9a;
+    background: rgba(125, 125, 125, 0.08);
+}
+.submenu {
+    height: 0;
+    opacity: 0;
+    pointer-events: none;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.submenu.open {
+    opacity: 1;
+    pointer-events: auto;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+.rotate-180 {
+    transform: rotate(180deg);
+}

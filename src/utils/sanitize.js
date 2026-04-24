@@ -73,8 +73,27 @@ function sanitizeStatus(value, fallback = 'pending') {
   return fallback;
 }
 
+function sanitizeHtml(value, options = {}) {
+  const raw = toStringValue(value).replace(/\r\n/g, '\n');
+  // Remove dangerous tags entirely (script, style, iframe, object, embed, form)
+  const stripped = raw
+    .replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, '')
+    .replace(/<style[\s\S]*?>[\s\S]*?<\/style>/gi, '')
+    .replace(/<iframe[\s\S]*?>[\s\S]*?<\/iframe>/gi, '')
+    .replace(/<object[\s\S]*?>[\s\S]*?<\/object>/gi, '')
+    .replace(/<embed[\s\S]*?>/gi, '')
+    .replace(/<form[\s\S]*?>[\s\S]*?<\/form>/gi, '');
+  // Remove event handler attributes (onclick, onerror, onload, etc.)
+  const noHandlers = stripped.replace(/\s+on\w+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, '');
+  // Remove javascript: protocol in href/src
+  const noJsProto = noHandlers.replace(/(href|src)\s*=\s*(?:"javascript:[^"]*"|'javascript:[^']*')/gi, '$1=""');
+  const result = noJsProto.trim();
+  return options.maxLength ? result.slice(0, options.maxLength) : result;
+}
+
 module.exports = {
   sanitizeText,
+  sanitizeHtml,
   sanitizeEmail,
   sanitizeUrl,
   sanitizeAssetUrl,

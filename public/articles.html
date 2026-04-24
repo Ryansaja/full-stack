@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Articles & Stories | Paved - Navigating Quarter-Life Together</title>
+    <meta name="description" content="Read curated articles and community stories about navigating the quarter-life crisis, identity, career, and personal growth at Paved.">
+    <meta name="keywords" content="articles, stories, quarter-life stories, personal growth blog, youth community articles, paved stories, reflective writing, identity discovery">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://gotitpaved.com/articles">
+    <meta property="og:title" content="Articles & Stories | Paved">
+    <meta property="og:description" content="Explore reflective digital content and shared community stories for navigating quarter-life crossroads.">
+    <meta property="og:image" content="https://gotitpaved.com/assets/pavedlogo.png">
+
+    <link rel="icon" type="image/png" href="assets/Branch.png">
+    <link rel="stylesheet" href="assets/output.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="assets/config.js"></script>
+    <script src="assets/paved-api.js?v=2"></script>
+
+    <style>
+        /* Specific page overrides only */
+        .hidden-article { 
+            opacity: 0; 
+            transform: translateY(20px); 
+            display: none !important; 
+        }
+        #noResultsMessage {
+            grid-column: 1 / -1;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body class="bg-white text-black dark:bg-[#0a0a0a] dark:text-white antialiased">
+
+   <div id="sidebarOverlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[200] opacity-0 pointer-events-none transition-opacity duration-500">
+    <div id="sidebarPanel" class="fixed top-0 left-0 w-full md:w-[450px] h-full bg-white dark:bg-[#0a0a0a] p-10 transform -translate-x-full z-[210] transition-all duration-500 border-r border-black/10 dark:border-white/5">
+        <div class="absolute top-8 left-0 w-full px-10 flex justify-between items-center">
+            <button id="themeToggleMobile" class="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-all duration-300 border border-black/10 dark:border-white/10">
+                <svg id="sunIconMobile" class="hidden w-5 h-5 text-orange-400" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"></path></svg>
+                <svg id="moonIconMobile" class="w-5 h-5 text-[#18eb9a]" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            </button>
+            <button id="closeSidebar" class="text-black/50 dark:text-white/50 hover:text-black dark:hover:text-white transition">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+
+        <div class="mt-16 space-y-6">
+            <div class="flex flex-col gap-4 text-3xl font-bold tracking-tighter">
+                <a href="/index" class="menu-item">Home Feed</a>
+
+                <div class="dropdown-group">
+                    <div onclick="toggleMenu(this)" class="menu-item flex justify-between items-center cursor-pointer">
+                        For You <svg class="w-6 h-6 transition-transform duration-300" fill="none" stroke="#18eb9a" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </div>
+                    <div class="submenu flex flex-col gap-4 pl-6 border-l border-slate-200 dark:border-white/10 ml-2">
+                        <a href="/articles" class="text-xl text-slate-500 hover:text-[#18eb9a] tracking-normal">Articles</a>
+                        <a href="/around-you" class="text-xl text-slate-500 hover:text-[#18eb9a] tracking-normal">What's Around You</a>
+                    </div>
+                </div>
+
+                <div class="dropdown-group">
+                    <div onclick="toggleMenu(this)" class="menu-item flex justify-between items-center cursor-pointer">
+                        From You <svg class="w-6 h-6 transition-transform duration-300" fill="none" stroke="#18eb9a" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </div>
+                    <div class="submenu flex flex-col gap-4 pl-6 border-l border-slate-200 dark:border-white/10 ml-2">
+                        <a href="/write-a-story" class="text-xl text-slate-500 hover:text-[#18eb9a] tracking-normal">Share Your Thought</a>
+                        <a href="/red-letter" class="text-xl text-slate-500 hover:text-[#FF0000] tracking-normal">Red Letter : The Unsent</a>
+                        <a href="/submit-event" class="text-xl text-slate-500 hover:text-[#18eb9a] tracking-normal">Submit An Event / Place</a>
+                    </div>
+                </div>
+
+                <div class="dropdown-group">
+                    <div onclick="toggleMenu(this)" class="menu-item flex justify-between items-center cursor-pointer">
+                        Product <svg class="w-6 h-6 transition-transform duration-300" fill="none" stroke="#18eb9a" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </div>
+                    <div class="submenu flex flex-col gap-4 pl-6 border-l border-slate-200 dark:border-white/10 ml-2">
+                        <a href="/product?filter=Digital Product" class="text-xl text-slate-500 hover:text-[#18eb9a] tracking-normal">Product Catalog</a>
+                        <a href="/product?filter=Journal %26 Kit" class="text-xl text-slate-500 hover:text-[#18eb9a] tracking-normal">Journal & Kit</a>
+                        <a href="/product?filter=Merchandise" class="text-xl text-slate-500 hover:text-[#18eb9a] tracking-normal">Merchandise</a>
+                        <a href="/product" class="text-xl text-slate-500 hover:text-[#18eb9a] tracking-normal">All Products</a>
+                    </div>
+                </div>
+
+                <a href="/write-a-story" class="menu-item">Write Now</a>
+                <a href="/about" class="menu-item">About</a>
+
+                <div class="flex gap-6 items-center pt-6 mt-4 border-t border-black/5 dark:border-white/5">
+                    <a href="https://www.instagram.com/gotitpaved/" target="_blank" rel="noopener noreferrer" class="text-black/50 dark:text-white/50 hover:text-[#18eb9a] transition">
+                        <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                    </a>
+                    <a href="https://www.tiktok.com/@gotitpaved?is_from_webapp=1&sender_device=pc" target="_blank" rel="noopener noreferrer" class="text-black/50 dark:text-white/50 hover:text-[#18eb9a] transition">
+                        <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.9-.32-1.98-.23-2.81.31-.75.42-1.24 1.25-1.31 2.1-.05.9.3 1.8 1.03 2.33.39.28.83.47 1.3.54 1.11.17 2.29-.19 3.11-.97.47-.48.74-1.14.76-1.8.01-2.98-.01-5.96 0-8.94.04-4.39-.01-8.79.02-13.18z"/>
+                        </svg>
+                    </a>
+                    <a href="mailto:pavedyourway@gmail.com" class="text-black/50 dark:text-white/50 hover:text-[#18eb9a] transition">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div id="searchOverlay" class="fixed inset-0 bg-black/95 z-[300] flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300">
+        <button id="closeSearch" class="absolute top-10 right-10 text-white/50 hover:text-white">
+            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+        <div class="w-full max-w-4xl px-10">
+            <input type="text" id="searchInput" placeholder="Type To Search..." class="w-full bg-transparent border-b-2 border-[#18eb9a] text-5xl md:text-7xl font-black  tracking-tighter outline-none pb-4 text-white placeholder:text-white/5">
+        </div>
+    </div>
+
+    <header class="fixed top-0 w-full z-[100] bg-white/80 dark:bg-[#0a0a0a]/80 backdrop-blur-2xl border-b border-black/5 dark:border-white/5 transition-all">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex items-center justify-between h-20 border-b border-black/5 dark:border-white/5">
+                <div class="flex-1 flex items-center gap-3">
+                    <button id="openSidebar" class="p-2 hover:text-[#18eb9a] transition">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                    </button>
+                    <button id="themeToggle" class="hidden md:flex p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-all duration-300">
+                        <svg id="sunIcon" class="hidden w-5 h-5 text-orange-400" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"></path></svg>
+                        <svg id="moonIcon" class="w-5 h-5 text-[#18eb9a]" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                    </button>
+                </div>
+                 <a href="/index" class="inline-block transition-transform duration-300 hover:scale-105 active:scale-95">
+    <div class="flex flex-col items-center justify-center">
+        <img src="assets/pavedlogo.png" alt="PAVED" class="h-10 w-auto object-contain invert-img transition-all" loading="lazy">
+    </div>
+</a>
+
+                <div class="flex items-center justify-end gap-5 flex-1">
+                    <button id="openSearch" class="hover:text-[#18eb9a] transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                    </button>
+                    <a href="/write-a-story" class="hidden md:block bg-black text-white dark:bg-white dark:text-black px-5 py-2 rounded-sm text-[14px] font-black uppercase hover:bg-[#18eb9a] hover:text-white transition duration-300">Write Now</a>
+                </div>
+            </div>
+
+            <nav class="flex justify-center items-center h-16 border-b border-black/5 dark:border-white/10 relative overflow-x-auto no-scrollbar">
+    <div class="flex gap-6 md:gap-10 text-[10px] md:text-[11px] font-extrabold uppercase tracking-[0.1em] md:tracking-[0.15em] whitespace-nowrap">
+        
+       <div class="relative group">
+    <a href="#" class="nav-link hover:text-[#18eb9a] transition" style="text-transform: none !important;">For You</a>
+    <div class="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-48 bg-white/70 dark:bg-black/70 backdrop-blur-xl border border-white/20 rounded-2xl p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 shadow-2xl z-50">
+        <a href="/articles" class="block px-4 py-3 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition text-center" style="text-transform: none !important;">Articles</a>
+        <a href="/around-you" class="block px-4 py-3 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition text-center" style="text-transform: none !important;">What’s Around You</a>
+    </div>
+</div>
+
+<div class="relative group">
+    <a href="#" class="nav-link hover:text-[#18eb9a] transition" style="text-transform: none !important;">From You</a>
+    <div class="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-48 bg-white/70 dark:bg-black/70 backdrop-blur-xl border border-white/20 rounded-2xl p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 shadow-2xl z-50">
+        <a href="/write-a-story" class="block px-4 py-3 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition text-center" style="text-transform: none !important;">Share Your Thought's</a>
+        <a href="/red-letter" class="block px-4 py-3 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition text-center" style="text-transform: none !important;">Red Letter : The Unsent</a>
+        <a href="/submit-event" class="block px-4 py-3 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition text-center" style="text-transform: none !important;">Submit An Event/Place</a>
+    </div>
+</div>
+
+<div class="relative group">
+    <a href="#" class="nav-link hover:text-[#18eb9a] transition" style="text-transform: none !important;">Product</a>
+    <div class="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-48 bg-white/70 dark:bg-black/70 backdrop-blur-xl border border-white/20 rounded-2xl p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 shadow-2xl z-50">
+        
+        <a href="/product?filter=Digital Product" class="block px-4 py-3 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition text-center" style="text-transform: none !important;">Product Catalog</a>
+        
+        <a href="/product?filter=Journal %26 Kit" class="block px-4 py-3 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition text-center" style="text-transform: none !important;">Journal & KIT</a>
+        
+        <a href="/product?filter=Merchandise" class="block px-4 py-3 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition text-center" style="text-transform: none !important;">Merchandise</a>
+        
+        <a href="/product" class="block px-4 py-3 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition text-center" style="text-transform: none !important;">All Products</a>
+    </div>
+</div>
+
+
+<div class="relative group">
+    <a href="/write-a-story" class="nav-link hover:text-[#18eb9a] transition" style="text-transform: none !important;">Write Now</a>
+</div>
+       
+            
+        </div>
+
+    </div>
+</nav>
+        </div>
+    </header>
+
+ <main class="pt-40 pb-20 px-6 max-w-7xl mx-auto font-['Plus_Jakarta_Sans',sans-serif]">
+  <div class="mb-12 flex flex-col lg:flex-row gap-4">
+    <div class="relative flex-1 group">
+        <svg class="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-black/30 dark:text-white/30 group-focus-within:text-[#18eb9a] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+        <input type="text" id="articleSearch" placeholder="Search for something that resonates" 
+               class="w-full bg-gray-100 dark:bg-[#121212] border border-black/10 dark:border-white/10 rounded-2xl py-4 pl-14 pr-6 text-[11px] font-black tracking-widest text-black dark:text-white outline-none focus:border-[#18eb9a]/50 transition-all placeholder:text-black/20 dark:placeholder:text-white/20">
+    </div>
+
+    <div class="relative group min-w-[200px]">
+        <svg class="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-black/40 dark:text-white/40 pointer-events-none group-focus-within:text-[#18eb9a] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 11h.01M7 15h.01M13 7h.01M13 11h.01M13 15h.01M17 7h.01M17 11h.01M17 15h.01"></path>
+        </svg>
+        <select id="categoryFilter" class="w-full appearance-none bg-gray-100 dark:bg-[#121212] border border-black/10 dark:border-white/10 rounded-2xl py-4 pl-12 pr-12 text-[11px] font-black uppercase tracking-widest text-black dark:text-white outline-none focus:border-[#18eb9a]/50 cursor-pointer transition-all">
+            <option value="all">All Segments</option>
+            <option value="pathfinder">Pathfinder</option>
+            <option value="drafts">Drafts</option>
+            <option value="sticky-notes">Sticky Notes</option>
+            <option value="spotlight">Spotlight</option>
+            <option value="red-letter">Red Letter</option>
+        </select>
+        <span class="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-[8px] text-black/30 dark:text-white/30">▼</span>
+    </div>
+
+    <div class="relative group min-w-[180px]">
+        <svg class="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-black/40 dark:text-white/40 pointer-events-none group-focus-within:text-[#18eb9a] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12"></path>
+        </svg>
+        <select id="sortSelect" class="w-full appearance-none bg-gray-100 dark:bg-[#121212] border border-black/10 dark:border-white/10 rounded-2xl py-4 pl-12 pr-12 text-[11px] font-black uppercase tracking-widest text-black dark:text-white outline-none focus:border-[#18eb9a]/50 cursor-pointer transition-all">
+            <option value="latest">Latest Feed</option>
+            <option value="oldest">Oldest First</option>
+            <option value="az">A - Z</option>
+            <option value="za">Z - A</option>
+        </select>
+        <span class="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-[8px] text-black/30 dark:text-white/30">▼</span>
+    </div>
+</div>
+
+    <div class="flex flex-col lg:flex-row gap-12">
+        
+        <div class="flex-1 space-y-12" id="articleList">
+            <p id="articleListLoading" class="py-16 text-center text-sm text-black/40 dark:text-white/40">Memuat artikel…</p>
+        </div>
+<div id="noResults" class="hidden py-20 text-center">
+    <p class="text-black/30 dark:text-white/30 font-black uppercase tracking-[0.2em] text-xs">
+        No Articles Found In This Segment
+    </p>
+</div>
+       <div class="w-full lg:w-96">
+    <div class="bg-[#18eb9a] p-8 rounded-2xl sticky top-32">
+        <h2 class="text-2xl font-black mb-8 text-black uppercase border-b border-black/10 pb-4">Stories you need to hear</h2>
+        
+        <div id="sidebarStoriesRoot" class="space-y-8"><p class="text-black/50 text-xs text-center py-4">Memuat…</p></div>
+    </div>
+</div>
+    </div>
+</main>
+<script>
+    // This script is intentionally minimal — the real search/sort logic 
+    // is in the later script block that waits for API data to load first.
+    // We only define the placeholder here so the API script can call it.
+    window.__pavedArticlesApplyFilter = function() {};
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', async function () {
+    const A = window.PAVED_API;
+    const listEl = document.getElementById('articleList');
+    const loadEl = document.getElementById('articleListLoading');
+    const sideEl = document.getElementById('sidebarStoriesRoot');
+    if (!A || !listEl) return;
+
+    function rowHtml(a) {
+        const slug = A.categorySlug(a.category);
+        const badge = A.categoryBadge(a.category);
+        const dateStr = A.formatDateIso(a.created_at);
+        const when = A.relativeTime(a.created_at);
+        const thumb = a.image_url ? A.mediaUrl(a.image_url) : 'https://images.unsplash.com/photo-1499750310107-5fef28a66643';
+        const blurb = A.excerpt(a.description || a.content, 220);
+        const author = A.escapeHtml(a.author_name || 'Anonymous');
+        const title = A.escapeHtml(a.title || '');
+        return `<a href="/read-article?id=${a.id}" class="article-item group block pb-12 border-b border-black/5 dark:border-white/5" data-title="${title.replace(/"/g, '&quot;')}" data-date="${dateStr}" data-category="${slug}">
+    <div class="flex flex-col md:flex-row gap-8">
+        <div class="w-full md:w-32 pt-2 shrink-0">
+            <span class="${badge.pill} text-[9px] font-black uppercase px-2 py-0.5 rounded-full tracking-widest">${badge.label}</span>
+            <p class="text-xs font-bold mt-4 text-black dark:text-white">${author}</p>
+            <p class="text-[10px] opacity-50 text-black dark:text-white">${A.escapeHtml(when)}</p>
+        </div>
+        <div class="flex-1 min-w-0">
+            <h2 class="text-2xl md:text-3xl font-bold leading-tight group-hover:text-[#18eb9a] transition-colors mb-4 text-black dark:text-white break-words">${title}</h2>
+            <p class="text-sm text-black/60 dark:text-white/40 leading-relaxed mb-6 break-words">${A.escapeHtml(blurb)}</p>
+        </div>
+        <div class="w-full md:w-48 aspect-square overflow-hidden rounded-lg shrink-0">
+            <img src="${thumb.replace(/"/g, '&quot;')}" alt="" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" onerror="this.src='https://images.unsplash.com/photo-1499750310107-5fef28a66643'" loading="lazy">
+        </div>
+    </div>
+</a>`;
+    }
+
+    function sideRow(a, i) {
+        const badge = A.categoryBadge(a.category);
+        const thumb = a.image_url ? A.mediaUrl(a.image_url) : 'https://images.unsplash.com/photo-1499750310107-5fef28a66643';
+        const t = A.escapeHtml(A.excerpt(a.title, 70));
+        return `<a href="/read-article?id=${a.id}" class="flex gap-4 group block">
+            <span class="bg-black text-white w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 mt-1">${i + 1}</span>
+            <div class="flex-1 min-w-0">
+                <span class="text-[8px] font-black uppercase tracking-widest text-black/60 mb-1 block">${badge.label}</span>
+                <h3 class="text-sm font-bold leading-tight text-black group-hover:underline break-words">${t}</h3>
+                <div class="flex items-center gap-2 mt-2 text-[9px] font-bold text-black/50"><span>${A.escapeHtml(A.relativeTime(a.created_at))}</span></div>
+            </div>
+            <div class="w-16 h-16 bg-black/10 rounded overflow-hidden shrink-0">
+                <img src="${thumb.replace(/"/g, '&quot;')}" class="w-full h-full object-cover transition-transform group-hover:scale-110" alt="" loading="lazy">
+            </div>
+        </a>`;
+    }
+
+    try {
+        const articles = await A.fetchJson('/articles');
+        if (loadEl) loadEl.remove();
+        if (!articles.length) {
+            listEl.innerHTML = '<p class="py-16 text-center text-sm text-black/40 dark:text-white/40">Belum ada artikel yang dipublish.</p>';
+            if (sideEl) sideEl.innerHTML = '<p class="text-black/50 text-xs text-center py-4">Belum ada cerita.</p>';
+            return;
+        }
+        listEl.innerHTML = articles.map(rowHtml).join('');
+        if (sideEl) {
+            let featured = articles.filter(a => a.is_recommended);
+            featured = featured.slice(0, 5);
+            sideEl.innerHTML = featured.length ? featured.map(sideRow).join('') : '<p class="text-black/50 text-xs text-center py-4">Belum ada cerita.</p>';
+        }
+
+        // === SETUP SEARCH, CATEGORY FILTER & SORT AFTER DATA IS LOADED ===
+        const searchInput = document.getElementById('articleSearch');
+        const categoryFilter = document.getElementById('categoryFilter');
+        const sortSelect = document.getElementById('sortSelect');
+        
+        // Capture articles AFTER they've been rendered from API
+        let originalArticles = Array.from(document.querySelectorAll('.article-item'));
+
+        function applyFilter() {
+            const query = (searchInput ? searchInput.value : "").toLowerCase().trim();
+            const selectedCat = categoryFilter ? categoryFilter.value.toLowerCase() : 'all';
+            let foundAny = false;
+
+            // Clear list for re-render
+            listEl.innerHTML = '';
+
+            originalArticles.forEach(article => {
+                const title = (article.dataset.title || "").toLowerCase();
+                const category = (article.dataset.category || "").toLowerCase();
+                
+                // Search in title, author, segment
+                const authorEl = article.querySelector('p.text-xs.font-bold');
+                const authorName = authorEl ? authorEl.innerText.toLowerCase() : "";
+                const segmentEl = article.querySelector('span');
+                const segmentName = segmentEl ? segmentEl.innerText.toLowerCase() : "";
+
+                const matchesSearch = !query || title.includes(query) || 
+                                      authorName.includes(query) || 
+                                      segmentName.includes(query);
+                const matchesCat = (selectedCat === 'all' || category === selectedCat);
+
+                if (matchesSearch && matchesCat) {
+                    article.style.display = 'block';
+                    article.style.opacity = '1';
+                    article.style.transform = 'translateY(0)';
+                    listEl.appendChild(article);
+                    foundAny = true;
+                }
+            });
+
+            // No results message
+            const existingMsg = document.getElementById('noResultsMessage');
+            if (existingMsg) existingMsg.remove();
+
+            if (!foundAny && (query || selectedCat !== 'all')) {
+                const noResult = document.createElement('div');
+                noResult.id = "noResultsMessage";
+                noResult.className = 'text-center py-20 text-black/40 dark:text-white/40 italic w-full';
+                const message = document.createElement('p');
+                message.textContent = query 
+                    ? `Tidak ada hasil untuk "${query}"` 
+                    : 'Tidak ada artikel di segmen ini';
+                const resetBtn = document.createElement('button');
+                resetBtn.type = 'button';
+                resetBtn.className = 'mt-4 text-[#18eb9a] font-bold uppercase text-[10px] tracking-widest hover:underline block mx-auto';
+                resetBtn.textContent = 'Reset & Lihat Semua';
+                resetBtn.addEventListener('click', function () {
+                    window.location.href = '/articles';
+                });
+                noResult.appendChild(message);
+                noResult.appendChild(resetBtn);
+                listEl.appendChild(noResult);
+            }
+        }
+
+        function sortArticles() {
+            const val = sortSelect ? sortSelect.value : 'latest';
+            originalArticles.sort((a, b) => {
+                const titleA = (a.dataset.title || "").toLowerCase();
+                const titleB = (b.dataset.title || "").toLowerCase();
+                const dateA = new Date(a.dataset.date);
+                const dateB = new Date(b.dataset.date);
+
+                if (val === 'latest') return dateB - dateA;
+                if (val === 'oldest') return dateA - dateB;
+                if (val === 'az') return titleA.localeCompare(titleB);
+                if (val === 'za') return titleB.localeCompare(titleA);
+                return 0;
+            });
+            applyFilter();
+        }
+
+        // Listen for input/change events
+        if (searchInput) searchInput.addEventListener('input', applyFilter);
+        if (categoryFilter) categoryFilter.addEventListener('change', applyFilter);
+        if (sortSelect) sortSelect.addEventListener('change', sortArticles);
+
+        // Check URL param for search query (from global search overlay)
+        const q = new URLSearchParams(window.location.search).get('q');
+        if (q && searchInput) {
+            searchInput.value = q;
+        }
+        
+        // Override the placeholder
+        window.__pavedArticlesApplyFilter = applyFilter;
+        
+        // Apply initial filter
+        applyFilter();
+
+    } catch (e) {
+        if (loadEl) loadEl.textContent = 'Gagal memuat artikel. Periksa API_BASE_URL atau backend.';
+        console.error(e);
+    }
+});
+</script>
+  <footer class="bg-white dark:bg-[#0a0a0a] border-t border-black/5 dark:border-white/5 pt-20 pb-10 transition-colors duration-500 font-['Plus_Jakarta_Sans',sans-serif]">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-32 mb-20">
+            
+            <div class="flex flex-col gap-6">
+                <div class="flex items-center">
+                    <img src="assets/pavedlogo.png" 
+                         alt="Paved Logo" 
+                         class="h-8 md:h-10 lg:h-12 w-auto object-contain transition-all duration-700 ease-in-out invert dark:invert-0 opacity-90 hover:opacity-100" loading="lazy" />
+                </div>
+
+                <div class="space-y-4">
+                    <p class="text-[11px] font-black text-[#18eb9a] uppercase tracking-[0.3em]">
+                        Your daily companion for navigating quarter-life uncertainty.
+                    </p>
+                    <p class="text-sm md:text-base leading-relaxed text-black/60 dark:text-white/40 font-medium max-w-xl">
+                        Paved is a multi-platform media companion for those navigating their quarter-life crossroads. We create and distribute reflective digital content—writing, conversations, and shared community stories—that helps young adults make sense of uncertainty around identity, career, relationships, and direction, so they can keep moving forward without feeling alone.
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex flex-col lg:items-end justify-start lg:justify-center space-y-8">
+                <div class="text-left lg:text-right space-y-6">
+                    <p class="text-[10px] font-black uppercase tracking-[0.4em] text-black/30 dark:text-white/20">Connect With Us</p>
+                    
+                    <div class="flex lg:justify-end gap-6 items-center">
+                       <a href="https://www.instagram.com/gotitpaved/" target="_blank" rel="noopener noreferrer" class="hover:text-[#18eb9a] transition">
+                    <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                </a>
+
+                <a href="https://www.tiktok.com/@gotitpaved?is_from_webapp=1&sender_device=pc" target="_blank" rel="noopener noreferrer" class="hover:text-[#18eb9a] transition">
+                    <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.9-.32-1.98-.23-2.81.31-.75.42-1.24 1.25-1.31 2.1-.05.9.3 1.8 1.03 2.33.39.28.83.47 1.3.54 1.11.17 2.29-.19 3.11-.97.47-.48.74-1.14.76-1.8.01-2.98-.01-5.96 0-8.94.04-4.39-.01-8.79.02-13.18z"/>
+                    </svg>
+                </a>
+
+                <a href="mailto:pavedyourway@gmail.com" class="hover:text-[#18eb9a] transition">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                    </svg>
+                </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="pt-10 border-t border-black/5 dark:border-white/5 flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left">
+            <div class="flex gap-10">
+                <a href="/about" class="text-[10px] font-black uppercase tracking-widest text-black/30 dark:text-white/20 hover:text-[#18eb9a] transition-colors">About Us</a>
+                
+            </div>
+            
+            <div class="text-[10px] font-black uppercase tracking-[0.3em] text-black/20 dark:text-white/20 order-last md:order-none">
+                © 2026 PAVED. ALL RIGHTS RESERVED.
+            </div>
+        </div>
+    </div>
+</footer>
+<style>
+    .active-filter {
+        background-color: #18eb9a !important;
+        color: white !important;
+        box-shadow: 0 10px 20px rgba(3, 185, 160, 0.3);
+    }
+    .article-item { transition: opacity 0.4s ease, transform 0.4s ease; }
+    .hidden-article { opacity: 0; transform: translateY(20px); pointer-events: none; display: none; }
+</style>
+<script>
+    // Menangani penutupan dropdown jika ada elemen yang fokus
+    document.addEventListener('click', function(event) {
+        const navContainers = document.querySelectorAll('.group');
+        
+        navContainers.forEach(container => {
+            // Jika klik terjadi di luar container dropdown
+            if (!container.contains(event.target)) {
+                // Opsional: Jika kamu menggunakan class manual seperti 'open'
+                // container.classList.remove('open'); 
+            }
+        });
+    });
+
+    // Tips Tambahan: Menangani Nama File Cover Image (dari chat sebelumnya)
+    function updateFileName(input) {
+        const label = document.getElementById('fileLabel');
+        if (input.files && input.files[0]) {
+            label.innerText = input.files[0].name;
+            label.classList.replace('opacity-40', 'opacity-100');
+            label.classList.add('text-[#18eb9a]');
+        }
+    }
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const articles = document.querySelectorAll('.article-item');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Change button style
+                filterBtns.forEach(b => b.classList.remove('active-filter', 'bg-[#18eb9a]', 'text-white'));
+                filterBtns.forEach(b => { if(!b.classList.contains('active-filter')) b.classList.add('glass-panel'); });
+                
+                btn.classList.add('active-filter');
+                btn.classList.remove('glass-panel');
+
+                const category = btn.getAttribute('data-category');
+
+                articles.forEach(article => {
+                    if (category === 'all' || article.getAttribute('data-category') === category) {
+                        article.classList.remove('hidden-article');
+                    } else {
+                        article.classList.add('hidden-article');
+                    }
+                });
+            });
+        });
+    });
+</script>
+ <script>
+    // Search/sort/filter already handled in the API-loading script above.
+    // Sidebar, theme, and search overlay logic below.
+
+    // 5. SIDEBAR LOGIC
+    const openSidebar = document.getElementById('openSidebar');
+    const closeSidebar = document.getElementById('closeSidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+    const sidebarPanel = document.getElementById('sidebarPanel');
+
+    openSidebar.onclick = () => {
+        sidebarOverlay.classList.remove('pointer-events-none', 'opacity-0');
+        sidebarOverlay.classList.add('opacity-100');
+        sidebarPanel.classList.remove('-translate-x-full');
+    };
+
+    const closeFunc = () => {
+        sidebarOverlay.classList.add('pointer-events-none', 'opacity-0');
+        sidebarOverlay.classList.remove('opacity-100');
+        sidebarPanel.classList.add('-translate-x-full');
+    };
+    closeSidebar.onclick = closeFunc;
+    sidebarOverlay.onclick = (e) => { if(e.target === sidebarOverlay) closeFunc(); };
+
+    // 6. THEME LOGIC
+    const html = document.documentElement;
+    const themeToggle = document.getElementById('themeToggle');
+    const themeToggleMobile = document.getElementById('themeToggleMobile');
+
+    function updateIcons(isDark) {
+        document.getElementById('sunIcon').classList.toggle('hidden', !isDark);
+        document.getElementById('moonIcon').classList.toggle('hidden', isDark);
+        document.getElementById('sunIconMobile').classList.toggle('hidden', !isDark);
+        document.getElementById('moonIconMobile').classList.toggle('hidden', isDark);
+    }
+
+    function toggleTheme() {
+        const isDark = html.classList.toggle('dark');
+        html.classList.toggle('light', !isDark);
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        updateIcons(isDark);
+    }
+
+    themeToggle.onclick = toggleTheme;
+    themeToggleMobile.onclick = toggleTheme;
+
+    // Initialize
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        html.className = savedTheme;
+        updateIcons(savedTheme === 'dark');
+
+    // 7. SEARCH OVERLAY LOGIC
+    const openSearch = document.getElementById('openSearch');
+    const closeSearch = document.getElementById('closeSearch');
+    const searchOverlay = document.getElementById('searchOverlay');
+
+    openSearch.onclick = () => {
+        searchOverlay.classList.remove('pointer-events-none', 'opacity-0');
+        document.getElementById('searchInput').focus();
+    };
+    closeSearch.onclick = () => searchOverlay.classList.add('pointer-events-none', 'opacity-0');
+
+
+// Menu Dropdown Logic
+function toggleMenu(element) {
+    const submenu = element.nextElementSibling;
+    const icon = element.querySelector('svg');
+    submenu.classList.toggle('open');
+    submenu.style.height = submenu.classList.contains('open') ? submenu.scrollHeight + "px" : "0";
+    icon.classList.toggle('rotate-180');
+}
+</script>
+
+
+<script>
+    // Filter Search
+    document.getElementById('searchInput').addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') {
+        const query = this.value.trim().toLowerCase();
+        if (query) {
+            // Mengarahkan ke articles.html dengan parameter pencarian
+            window.location.href = `/articles?q=${encodeURIComponent(query)}`;
+        }
+    }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,1926 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Red Letter: Unsent Letters & Music Stories | Paved</title>
+    <meta name="description" content="Share your unsent letters and discover the music that defines your quarter-life journey. A place to whisper thoughts you can't say out loud.">
+    <meta name="keywords" content="unsent letters, red letter, music stories, spotify letters, anonymous letters, quarter-life reflection, whisper stories, paved red letter">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://gotitpaved.com/red-letter">
+    <meta property="og:title" content="Red Letter: The Unsent | Paved">
+    <meta property="og:description" content="A safe space to share unsent thoughts and the songs that carry them.">
+    <meta property="og:image" content="https://gotitpaved.com/assets/gemboklove.png">
+
+    <link rel="icon" type="image/png" href="assets/Branch.png">
+    <script src="assets/config.js"></script>
+    <link rel="stylesheet" href="assets/output.css">
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        
+        :root {
+    --bg-dark: #0a0a0a;
+    --bg-light: #ffffff;
+    --red-gradient-dark: rgba(255, 77, 77, 0.15); /* Merah sedikit lebih kuat */
+    --red-gradient-light: rgba(255, 77, 77, 0.08); /* Merah lebih halus untuk putih */
+}
+
+body { 
+    font-family: 'Plus Jakarta Sans', sans-serif; 
+    overflow-x: hidden; 
+    scroll-behavior: smooth;
+    transition: background-color 0.4s ease, color 0.4s ease;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-position: bottom;
+}
+
+/* Dark Mode (Default) */
+body { 
+    background-color: var(--bg-dark); 
+    background-image: linear-gradient(to top, var(--red-gradient-dark) 0%, transparent 80%);
+}
+
+/* Light Mode */
+/* Update pada bagian Light Mode */
+body.light {
+    background-color: #ffffff; 
+    /* Menggunakan intensitas warna yang lebih tinggi (0.15) 
+       dan memperpendek titik transisinya (ke 60%) 
+       agar merahnya lebih menonjol di bagian bawah */
+    background-image: linear-gradient(to top, rgba(255, 50, 50, 0.15) 0%, transparent 60%);
+}
+
+/* Tambahkan ini untuk otomatis membalik warna logo */
+.invert-img { transition: filter 0.4s ease; }
+.light .invert-img { filter: invert(1) brightness(0.2); }
+
+/* Perbaikan agar teks di dalam card ikut berubah */
+.glass-card p, .glass-card h4 { color: inherit; }
+
+        /* Glassmorphism yang konsisten */
+.glass-card {
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    transition: all 0.4s ease;
+}
+
+/* Dark Mode Card */
+.dark .glass-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Light Mode Card */
+.light .glass-card {
+    background: rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}
+        
+        .input-style { 
+            background: rgba(255, 255, 255, 0.03); 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            border-radius: 1.5rem; 
+            padding: 1.2rem; 
+            width: 100%; 
+            outline: none; 
+            transition: 0.3s; 
+            color: white;
+        }
+        .input-style:focus { border-color: var(--brand-primary); background: rgba(255, 255, 255, 0.05); }
+        
+        .red-gradient-text { 
+            background: linear-gradient(to right, #ff4d4d, #f9cb28); 
+            -webkit-background-clip: text; 
+            background-clip: text;
+            -webkit-text-fill-color: transparent; 
+        }
+        
+        .font-cursive { font-family: 'Caveat', cursive; }
+
+        /* MODAL ANIMATION */
+        .modal-overlay { transition: opacity 0.3s ease, visibility 0.3s; }
+        .modal-content { transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        .hidden-modal { opacity: 0; visibility: hidden; pointer-events: none; }
+        .hidden-modal .modal-content { transform: scale(0.9) translateY(20px); }
+
+        /* INFINITE AUTO-SCROLL FEED */
+        .swiper-container { width: 100%; overflow: hidden; position: relative; padding: 40px 0; }
+        .swiper-track { 
+    display: flex; 
+    gap: 2rem; 
+    width: max-content; 
+    animation: scroll 100s linear infinite; 
+}
+        .swiper-track:hover { animation-play-state: paused; }
+        
+        @keyframes scroll { 
+            0% { transform: translateX(0); } 
+            100% { transform: translateX(-50%); } 
+        }
+        
+        .card-fixed { min-width: 350px; max-width: 350px; white-space: normal; }
+
+        /* CUSTOM SCROLLBAR */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--brand-primary); }
+
+   /* Efek Kertas Terbakar */
+/* Animasi pop-up muncul */
+#burnSuccessOverlay.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+#burnSuccessOverlay.show > div {
+    transform: scale(1);
+}
+.burning-target {
+
+    animation: burnEffect 9.5s forwards cubic-bezier(0.2, 0, 0.8, 1);
+
+    pointer-events: none;
+
+    transform-origin: center;
+
+}
+
+
+
+@keyframes burnEffect {
+
+    0% { transform: scale(1) rotate(0); filter: brightness(1) sepia(0); }
+
+    /* Tahap Membara */
+
+    20% { filter: brightness(2) sepia(1) saturate(5) hue-rotate(-20deg); transform: scale(1.02); }
+
+    /* Tahap Api Merayap */
+
+    50% {
+
+        box-shadow: 0 0 50px 20px #ff4500, inset 0 0 30px #ffcc00;
+
+        filter: brightness(1.5) grayscale(0.5);
+
+    }
+
+    /* Tahap Menjadi Abu */
+
+    100% {
+
+        transform: scale(0.5) rotate(10deg) translateY(50px);
+
+        opacity: 0;
+
+        filter: brightness(0) blur(10px);
+
+    }
+
+}
+/* 1. Warna Default (Saat Masih Kosong / Placeholder) */
+#searchInput {
+    color: rgba(255, 255, 255, 0.2) !important; /* Abu-abu redup */
+    transition: color 0.3s ease, opacity 0.3s ease;
+}
+
+/* 2. Warna Saat Placeholder Hilang (Saat Kamu Mulai Mengetik) */
+#searchInput:not(:placeholder-shown) {
+    color: #ffffff !important; /* Putih Pekat Solid */
+    opacity: 1 !important;
+    -webkit-text-fill-color: #ffffff !important;
+}
+
+/* 3. Pastikan Placeholder-nya sendiri tetap tipis/abu-abu */
+#searchInput::placeholder {
+    color: rgba(255, 255, 255, 0.1) !important;
+    
+}
+
+/* Pastikan font cursive kamu tidak bikin line-height berantakan */
+.font-cursive {
+    font-family: 'Dancing Script', cursive;
+    line-height: 1.4;
+}
+
+/* Tambahkan ini untuk jaga-jaga jika Tailwind tidak meload */
+.glass-card p {
+    margin-bottom: 1.5rem;
+}
+/* Partikel Api & Abu Realistis */
+
+.particle {
+
+    position: fixed;
+
+    pointer-events: none;
+
+    z-index: 10002;
+
+    border-radius: 50%;
+
+}
+/* Light Mode overrides */
+.light {
+    --bg-primary: #ffffff; /* Ubah dari #f5f5f5 ke #ffffff agar putih bersih */
+    --text-primary: #1a1a1a;
+    --card-bg: rgba(0, 0, 0, 0.03);
+    --border-color: rgba(0, 0, 0, 0.05);
+}
+/* PAKSA TOMBOL HAMBURGER KE DEPAN */
+#openSidebar {
+    position: fixed !important; /* Gunakan fixed agar posisinya stabil */
+    z-index: 100001 !important; /* Harus lebih tinggi dari loader (9999) */
+    pointer-events: auto !important; /* Pastikan bisa menerima klik */
+    cursor: pointer !important;
+}
+
+/* PAKSA SIDEBAR JUGA KE DEPAN */
+#sidebarOverlay {
+    z-index: 100002 !important;
+}
+#sidebarPanel {
+    z-index: 100003 !important;
+}
+
+/* PASTIKAN GLOW MERAH DI BAWAH TIDAK MENGHALANGI KLIK */
+.bottom-glow {
+    pointer-events: none !important; /* Glow hanya hiasan, jangan terima klik */
+}
+.light .glass-card {
+    background: rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    color: #1a1a1a;
+}
+
+.light .input-style {
+    background: rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: #1a1a1a;
+}
+
+/* Memastikan teks terbaca di light mode */
+.light .text-white { color: #1a1a1a !important; }
+.light .text-white\/40 { color: rgba(0, 0, 0, 0.4) !important; }
+.light .text-white\/20 { color: rgba(0, 0, 0, 0.2) !important; }
+.light .border-white\/10 { border-color: rgba(0, 0, 0, 0.1) !important; }
+:root {
+    --bg-primary: #0a0a0a;
+    --text-primary: #ffffff;
+    --card-bg: rgba(255, 255, 255, 0.02);
+    --border-color: rgba(255, 255, 255, 0.05);
+}
+
+.light {
+    --bg-primary: #f5f5f5;
+    --text-primary: #1a1a1a;
+    --card-bg: rgba(0, 0, 0, 0.03);
+    --border-color: rgba(0, 0, 0, 0.1);
+}
+
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+/* Terapkan variabel ini pada kartu dan elemen lainnya */
+.glass-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+/* Navigasi */
+header {
+    background-color: var(--bg-primary); /* Pastikan header ikut variabel */
+    border-bottom: 1px solid var(--border-color);
+}
+/* Pastikan link navigasi mengikuti warna teks utama */
+.nav-link {
+    color: var(--text-primary) !important;
+    transition: color 0.3s ease;
+}
+
+/* Pastikan icon hamburger/sidebar juga mengikuti warna teks */
+#openSidebar, #openSearch {
+    color: var(--text-primary);
+}
+
+/* Sidebar menu item juga harus mengikuti tema */
+.menu-item {
+    color: var(--text-primary) !important;
+}
+/* Saat di Light Mode, paksa tombol jadi Hitam */
+.light .md\:block {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+}
+
+/* Saat Hover di Light Mode, tetap hijau */
+.light .md\:block:hover {
+    background-color: #18eb9a !important;
+    color: #ffffff !important;
+}
+:root {
+    /* Warna Hitam Solid untuk Dark Mode */
+    --sidebar-bg: #0a0a0a; 
+    --sidebar-text: #ffffff;
+}
+
+.light {
+    /* Warna Putih Solid untuk Light Mode */
+    --sidebar-bg: #ffffff; 
+    --sidebar-text: #1a1a1a;
+}
+
+#sidebarPanel {
+    background-color: var(--sidebar-bg);
+    /* Shadow lebih halus untuk kesan premium, bukan 'kaca' */
+    box-shadow: 15px 0 40px rgba(0, 0, 0, 0.05);
+    transition: background-color 0.4s ease, transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Memastikan teks mengikuti variabel di atas */
+#sidebarPanel .menu-item, 
+#sidebarPanel .submenu a {
+    color: var(--sidebar-text) !important;
+}
+
+/* Hover tetap menggunakan warna hijau neon kebanggaanmu */
+#sidebarPanel .menu-item:hover, 
+#sidebarPanel .submenu a:hover {
+    color: #18eb9a !important;
+}
+/* PAKSA MERAH: Menimpa semua aturan hover hijau global */
+#sidebarPanel .special-red, 
+#sidebarPanel .special-red:hover {
+    color: #FF0000 !important; /* Merah Solid */
+    opacity: 1 !important;
+    background: none !important;
+    transform: none !important; /* Hapus geser jika tidak mau geser */
+}
+
+/* Jika ingin saat di-hover ada sedikit efek terang */
+#sidebarPanel .special-red:hover {
+    text-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+    letter-spacing: 0.02em;
+}
+
+/* Pastikan di Light Mode tetap MERAH */
+.light #sidebarPanel .special-red {
+    color: #FF0000 !important;
+}
+
+/* Memastikan teks menu item tetap terlihat premium */
+.menu-item {
+    color: var(--text-primary) !important;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+/* Container kartu harus relatif agar aura bisa diposisikan */
+.card-wrapper {
+    position: relative;
+    z-index: 1;
+}
+
+/* CSS sidebar redletter */
+/* CSS sidebar redletter */
+:root {
+    --sidebar-bg: #0a0a0a; 
+    --sidebar-text: #ffffff;
+    --submenu-muted: rgba(255, 255, 255, 0.4);
+}
+
+.light {
+    --sidebar-bg: #ffffff; 
+    --sidebar-text: #1a1a1a;
+    --submenu-muted: rgba(0, 0, 0, 0.4);
+}
+
+#sidebarPanel {
+    background-color: var(--sidebar-bg);
+    box-shadow: 15px 0 40px rgba(0, 0, 0, 0.05);
+    transition: background-color 0.4s ease, transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* --- MENU UTAMA (Bisa Bergerak) --- */
+#sidebarPanel .menu-item {
+    color: var(--sidebar-text) !important;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+#sidebarPanel .menu-item:hover {
+    color: #18eb9a !important;
+    transform: translateX(8px); /* Menu utama tetap geser */
+}
+
+/* --- SUBMENU (Diam/Tidak Bergerak) --- */
+.submenu {
+    border-left: 1px solid rgba(128, 128, 128, 0.1);
+    margin-left: 0.5rem;
+    padding-left: 1.5rem;
+}
+
+#sidebarPanel .submenu a {
+    display: inline-block;
+    transition: color 0.3s ease; /* Transisi warna saja */
+    transform: none !important; /* Kunci agar tidak bergerak */
+}
+
+/* Submenu Umum (Abu ke Hijau) */
+#sidebarPanel .submenu a:not(.special-red):not(#redLetterLink) {
+    color: var(--submenu-muted) !important;
+}
+
+#sidebarPanel .submenu a:not(.special-red):not(#redLetterLink):hover {
+    color: #18eb9a !important;
+    transform: none !important; /* Tetap diam */
+}
+
+/* --- KHUSUS RED LETTER (Submenu Merah & Diam) --- */
+#sidebarPanel a.special-red, 
+#sidebarPanel a#redLetterLink {
+    color: var(--submenu-muted) !important;
+    
+    letter-spacing: normal !important;
+    
+}
+
+#sidebarPanel a.special-red:hover, 
+#sidebarPanel a#redLetterLink:hover {
+    color: #FF0000 !important; /* Menjadi Merah */
+    transform: none !important; /* Tetap diam */
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+    letter-spacing: normal !important;
+}
+/* Class khusus untuk mengatur BENTUK gradasi agar mengerucut tajam di pojok */
+/* Wrapper untuk stack efek di bagian bawah */
+.bottom-glow-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    /* Tinggi dibuat proporsional agar kerucut terlihat jelas di ujung */
+    height: 35vh; 
+    z-index: 999; /* Layer paling depan menutupi item lain */
+    pointer-events: none; /* Tidak mengganggu navigasi/klik */
+    overflow: hidden;
+}
+
+/* Layer 1: Bentuk Kerucut Merah Solid (0,0 C 15,80 L 850,100...) */
+/* Path diubah: Datar di tengah, naik mendadak di 15% ujung kiri/kanan */
+.bottom-glow-shape {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    fill: #ca1c1d; /* Merah solid */
+    filter: blur(12px); /* Menghaluskan garis potong agar pendarannya smooth */
+    opacity: 0.15; /* Disesuaikan agar pendaran merahnya terlihat solid di ujung */
+}
+/* --- OVERRIDE WHITE GLASSMORPHISM Tanpa Ubah HTML --- */
+
+/* 1. Paksa Card Jadi Putih Pekat (Glassmorphism Light) */
+#formModal .glass-card {
+    background-color: rgba(255, 255, 255, 0.95) !important; /* Putih pekat tetap ada efek kaca */
+    backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important; /* Garis tepi card agar tegas */
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* 2. Paksa Tulisan Judul Jadi Hitam */
+#formModal h3 {
+    color: #000000 !important;
+    opacity: 1 !important;
+}
+
+/* 3. Paksa Inputan Punya Garis (Border) dan Teks Hitam */
+#formModal .input-style {
+    background-color: rgba(0, 0, 0, 0.03) !important;
+    border: 1px solid #d1d5db !important; /* Garis input abu-abu jelas */
+    color: #000000 !important; /* Tulisan saat ngetik jadi hitam */
+}
+
+/* 4. Paksa Placeholder Jadi Abu-abu (Agar Kelihatan) */
+#formModal .input-style::placeholder {
+    color: rgba(0, 0, 0, 0.4) !important;
+}
+
+/* 5. Perbaiki Tombol 'Burn Letter' Agar Kelihatan di BG Putih */
+#formModal button[onclick*="confirmModal"] {
+    background-color: rgba(0, 0, 0, 0.05) !important;
+    border: 1px solid rgba(0, 0, 0, 0.2) !important;
+    color: #000000 !important;
+}
+
+/* 6. Tambahkan Efek Fokus Saat Input Diklik (Garis Jadi Merah) */
+#formModal .input-style:focus {
+    border-color: #ff4d4d !important;
+    background-color: #ffffff !important;
+    outline: none;
+}
+
+/* --- KONFIRMASI MODAL (Agar Tetap Sinkron) --- */
+#confirmModal .glass-card {
+    background-color: rgba(255, 255, 255, 0.98) !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+#confirmModal h3, #confirmModal p, #confirmModal button:last-child {
+    color: #000000 !important;
+}
+/* Layer 2: Warna Penutup Tengah (Putih/Sesuai Background) */
+.bottom-cover-mask {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    /* Menutup 70% lebar tengah layar (15% di kiri dan 15% di kanan bersih) */
+    width: 70%; 
+    height: 100%;
+    /* Warna penutup sesuai background dasar PAVED (misalnya putih/abu-abu terang) */
+    background: #ffffff; /* Ubah ke #1c1c1c untuk Dark Mode */
+    
+    /* Membuat transisi halus antara penutup tengah dan kerucut merah di pojok */
+    background: linear-gradient(to top, #ffffff 80%, transparent 100%); 
+}
+
+/* Tetap elegan saat Light Mode */
+.light .bottom-glow-shape {
+    opacity: 0.1;
+}
+/* --- FULL WHITE SOLID OVERRIDE (Tanpa Ubah HTML) --- */
+
+/* 1. Paksa Semua Card Modal Jadi Putih Pekat */
+#formModal .glass-card, 
+#confirmModal .glass-card,
+#searchModal .glass-card {
+    background-color: #ffffff !important; /* Putih Solid 100% */
+    background-image: none !important;
+    backdrop-filter: none !important; /* Hapus efek blur agar bersih */
+    -webkit-backdrop-filter: none !important;
+    border: 1px solid #e5e7eb !important; /* Garis tepi abu-abu sangat muda */
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* 2. Paksa Tulisan Judul & Deskripsi Jadi Hitam Pekat */
+#formModal h3, #confirmModal h3, #searchModal h3,
+#confirmModal p, #searchModal p {
+    color: #000000 !important;
+    opacity: 1 !important;
+}
+
+/* 3. Perbaiki Garis Input (Border) Agar Terlihat Jelas */
+#formModal .input-style,
+#searchModal .input-style {
+    background-color: #f9fafb !important; /* Background input sedikit abu agar kontras */
+    border: 1px solid #d1d5db !important; /* Garis border abu-abu tegas */
+    color: #000000 !important;
+    border-radius: 1rem !important;
+}
+
+/* 4. Placeholder Jadi Gelap (Agar Kelihatan) */
+#formModal .input-style::placeholder,
+#searchModal .input-style::placeholder {
+    color: rgba(0, 0, 0, 0.4) !important;
+}
+
+/* 5. Tombol 'Burn Letter' & 'Close Search' */
+#formModal button[onclick*="confirmModal"],
+#searchModal button[onclick*="closeModal"] {
+    background-color: #f3f4f6 !important;
+    border: 1px solid #d1d5db !important;
+    color: #000000 !important;
+    opacity: 1 !important;
+}
+
+/* 6. Efek Saat Klik Input (Garis Jadi Merah) */
+#formModal .input-style:focus,
+#searchModal .input-style:focus {
+    border-color: #ff4d4d !important;
+    background-color: #ffffff !important;
+    box-shadow: 0 0 0 2px rgba(255, 77, 77, 0.1) !important;
+    outline: none;
+}
+    </style>
+</head>
+
+
+<body class="antialiased">
+    <div class="fixed bottom-0 left-0 w-full h-[15vh] z-[999] pointer-events-none bg-gradient-to-t from-[#ca1c1d]/60 via-[#ca1c1d]/10 to-transparent bottom-glow"></div>
+    <div id="loader" class="fixed inset-0 z-[9999] bg-[#0a0a0a] flex flex-col items-center justify-center transition-opacity duration-700">
+    <img src="assets/pavedlogo.png" id="loaderLogo" class="h-12 w-auto opacity-0 scale-90 transition-all duration-1000">
+    <div class="mt-8 w-24 h-[1px] bg-white/10 overflow-hidden rounded-full">
+        <div id="loaderProgress" class="h-full bg-[#ff4d4d] w-0 transition-all duration-1000"></div>
+    </div>
+</div>
+<style>
+    .submenu {
+        height: 0;
+        opacity: 0;
+        pointer-events: none;
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .submenu.open {
+        opacity: 1;
+        pointer-events: auto;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .rotate-180 {
+        transform: rotate(180deg);
+    }
+    /* --- TOMBOL CLOSE SIDEBAR --- */
+
+/* Kondisi Normal: Abu-abu (Slate 500) */
+#closeSidebarBtn svg {
+    stroke: #64748b !important;
+    transition: none !important; /* Matikan semua animasi */
+}
+
+/* Hover di Dark Mode: Jadi Putih */
+#closeSidebarBtn:hover svg {
+    stroke: #ffffff !important;
+    transform: none !important; /* Pastikan tidak bergerak */
+}
+
+/* Hover di Light Mode: Jadi Hitam */
+.light #closeSidebarBtn:hover svg {
+    stroke: #000000 !important;
+    transform: none !important;
+}
+</style>
+
+<script>
+// Sidebar dropdown accordion toggle (same as other pages)
+function toggleMenu(element) {
+    const group = element.parentElement;
+    const submenu = group.querySelector('.submenu');
+    const icon = element.querySelector('svg');
+
+    const isOpen = submenu.classList.contains('open');
+
+    // Close all other menus first (accordion effect)
+    document.querySelectorAll('.submenu').forEach(nav => {
+        nav.classList.remove('open');
+        nav.style.height = '0px';
+        const otherIcon = nav.previousElementSibling ? nav.previousElementSibling.querySelector('svg') : null;
+        if (otherIcon) otherIcon.classList.remove('rotate-180');
+    });
+
+    // If it was closed, open it
+    if (!isOpen) {
+        submenu.classList.add('open');
+        submenu.style.height = submenu.scrollHeight + "px";
+        icon.classList.add('rotate-180');
+    }
+}
+</script>
+
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[200] opacity-0 pointer-events-none transition-opacity duration-500">
+    <div id="sidebarPanel" class="fixed top-0 left-0 w-full md:w-[450px] h-full glass-sidebar backdrop-blur-2xl p-10 transform -translate-x-full z-[210] transition-all duration-500 border-r border-[var(--border-color)]">
+    
+        <div class="absolute top-8 left-0 w-full px-10 flex justify-between items-center">
+            <button id="themeToggleMobile" style="display:none" class="p-2 rounded-full hover:bg-white/10 transition-all duration-300 border border-white/10">
+                <svg id="sunIconMobile" class="hidden w-5 h-5 text-orange-400" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"></path></svg>
+                <svg id="moonIconMobile" class="w-5 h-5 text-[#18eb9a]" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            </button>
+
+            <button id="closeSidebarBtn" class="p-2">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+
+        <div class="mt-16 space-y-6">
+            <div class="flex flex-col gap-4 text-3xl font-bold tracking-tighter">
+                <a href="/index" class="menu-item">Home Feed</a>
+
+                <div class="dropdown-group">
+                    <div onclick="toggleMenu(this)" class="menu-item flex justify-between items-center cursor-pointer">
+                        For You <svg class="w-6 h-6 transition-transform duration-300" fill="none" stroke="#18eb9a" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </div>
+                    <div class="submenu flex flex-col gap-4 pl-6 border-l border-slate-200 dark:border-white/10 ml-2">
+                        <a href="/articles" class="text-xl text-slate-500 hover:text-[#18eb9a] tracking-normal">Articles</a>
+                        <a href="/around-you" class="text-xl text-slate-500 hover:text-[#18eb9a] tracking-normal">What's Around You</a>
+                    </div>
+                </div>
+
+                <div class="dropdown-group">
+                    <div onclick="toggleMenu(this)" class="menu-item flex justify-between items-center cursor-pointer">
+                        From You <svg class="w-6 h-6 transition-transform duration-300" fill="none" stroke="#18eb9a" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </div>
+                    <div class="submenu flex flex-col gap-4 pl-6 border-l border-slate-200 dark:border-white/10 ml-2">
+                        <a href="/write-a-story" class="text-xl text-slate-500 hover:text-[#18eb9a] tracking-normal">Share Your Thought</a>
+                        <a href="/red-letter" id="redLetterLink" class="special-red text-xl font-black transition-all duration-300">Red Letter : The Unsent</a>
+                        <a href="/submit-event" class="text-xl text-slate-500 hover:text-[#18eb9a] tracking-normal">Submit An Event / Place</a>
+                    </div>
+                </div>
+
+                <div class="dropdown-group">
+                    <div onclick="toggleMenu(this)" class="menu-item flex justify-between items-center cursor-pointer">
+                        Product 
+                        <svg class="w-6 h-6 transition-transform duration-300" fill="none" stroke="#18eb9a" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </div>
+                    <div class="submenu flex flex-col gap-4 pl-6 border-l border-slate-200 dark:border-white/10 ml-2">
+                        <a href="/product?filter=Digital Product" class="text-xl text-slate-500 light:text-white hover:text-[#18eb9a] tracking-normal">Product Catalog</a>
+                        <a href="/product?filter=Journal %26 Kit" class="text-xl text-slate-500 light:text-white hover:text-[#18eb9a] tracking-normal">Journal & Kit</a>
+                        <a href="/product?filter=Merchandise" class="text-xl text-slate-500 light:text-white hover:text-[#18eb9a] tracking-normal">Merchandise</a>
+                        <a href="/product" class="text-xl text-slate-500 light:text-white hover:text-[#18eb9a] tracking-normal">All Products</a>
+                    </div>
+                </div>
+
+                <a href="/write-a-story" class="menu-item">Write Now</a>
+                <a href="/about" class="menu-item">About</a>
+
+                <div class="flex gap-6 items-center pt-6 mt-4 border-t border-black/5 dark:border-white/5">
+                    <a href="https://www.instagram.com/gotitpaved/" target="_blank" rel="noopener noreferrer" class="text-slate-500 hover:text-[#18eb9a] transition">
+                        <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                    </a>
+                    <a href="https://www.tiktok.com/@gotitpaved?is_from_webapp=1&sender_device=pc" target="_blank" rel="noopener noreferrer" class="text-slate-500 hover:text-[#18eb9a] transition">
+                        <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.9-.32-1.98-.23-2.81.31-.75.42-1.24 1.25-1.31 2.1-.05.9.3 1.8 1.03 2.33.39.28.83.47 1.3.54 1.11.17 2.29-.19 3.11-.97.47-.48.74-1.14.76-1.8.01-2.98-.01-5.96 0-8.94.04-4.39-.01-8.79.02-13.18z"/>
+                        </svg>
+                    </a>
+                    <a href="mailto:pavedyourway@gmail.com" class="text-slate-500 hover:text-[#18eb9a] transition">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="searchOverlay" class="fixed inset-0 bg-black/95 z-[300] flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300">
+    <button id="closeSearch" class="absolute top-10 right-10 text-white/50 hover:text-white">
+        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+    </button>
+    <div class="w-full max-w-4xl px-10">
+            <input type="text" id="searchInput" placeholder="Type To Search..." class="w-full bg-transparent border-b-2 border-[#18eb9a] text-5xl md:text-7xl font-black tracking-tighter outline-none pb-4 text-white placeholder:text-white/5">
+        </div>
+</div>
+    <script>
+document.addEventListener('DOMContentLoaded', () => {
+    const searchOverlay = document.getElementById('searchOverlay');
+    const searchInput = document.getElementById('searchInput');
+    const closeSearchBtn = document.getElementById('closeSearch');
+
+    // 1. Fungsi Buka Search (Klik tombol kaca pembesar di navbar)
+    document.addEventListener('click', (e) => {
+        // Mencari element dengan ID openSearch atau yang berada di dalamnya
+        if (e.target.closest('#openSearch')) {
+            e.preventDefault();
+            searchOverlay.classList.remove('opacity-0', 'pointer-events-none');
+            // Fokus otomatis ke kolom ketik setelah 100ms
+            setTimeout(() => searchInput.focus(), 100);
+        }
+    });
+
+    // 2. Fungsi Tutup Search (Klik tombol X)
+    if (closeSearchBtn) {
+        closeSearchBtn.addEventListener('click', () => {
+            searchOverlay.classList.add('opacity-0', 'pointer-events-none');
+            searchInput.value = ''; 
+        });
+    }
+
+    // 3. Tutup dengan tombol ESC di Keyboard
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !searchOverlay.classList.contains('opacity-0')) {
+            searchOverlay.classList.add('opacity-0', 'pointer-events-none');
+        }
+    });
+
+    // 4. Logika Enter untuk pindah ke articles.html
+    if (searchInput) {
+        searchInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                const query = this.value.trim();
+                if (query) {
+                    // Berpindah halaman sambil mengirim kata kunci
+                    window.location.href = `/articles?q=${encodeURIComponent(query)}`;
+                }
+            }
+        });
+    }
+});
+</script>
+   <header class="fixed top-0 w-full z-[100] bg-[var(--bg-primary)] backdrop-blur-2xl border-b border-[var(--border-color)] transition-all duration-400">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex items-center justify-between h-20 border-b border-black/5 dark:border-white/5">
+                
+                <div class="flex-1 flex items-center gap-3">
+                    <button id="openSidebar" class="p-2 hover:text-[#18eb9a] transition">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                    </button>
+                   <button id="themeToggle" class="hidden md:flex p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-all duration-300">
+                        <svg id="sunIcon" class="hidden w-5 h-5 text-orange-400" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"></path></svg>
+                        <svg id="moonIcon" class="w-5 h-5 text-[#18eb9a]" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                    </button>
+                </div>
+
+                <a href="/index" class="inline-block transition-transform duration-300 hover:scale-105 active:scale-95">
+    <div class="flex flex-col items-center justify-center">
+                <img src="assets/pavedlogo.png" alt="PAVED" class="h-10 w-auto object-contain invert-img transition-all" loading="lazy" decoding="async">
+    </div>
+</a>
+
+
+                <div class="flex items-center justify-end gap-5 flex-1">
+                    <button id="openSearch" class="hover:text-[#18eb9a] transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                    </button>
+                    <a href="/write-a-story" 
+   class="hidden md:block bg-black text-white dark:bg-white dark:text-black px-5 py-2 rounded-sm text-[14px] font-black uppercase hover:bg-[#18eb9a] hover:text-white transition duration-300">
+   Write Now
+</a>
+                </div>
+            </div>
+<nav class="flex justify-center items-center h-16 border-b border-black/5 dark:border-white/10 relative overflow-x-auto no-scrollbar">
+    <div class="flex gap-6 md:gap-10 text-[10px] md:text-[11px] font-extrabold uppercase tracking-[0.1em] md:tracking-[0.15em] whitespace-nowrap">
+        
+        <div class="relative group">
+            <a href="#" class="nav-link hover:text-[#18eb9a] transition" style="text-transform: none !important;">For You</a>
+            <div class="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-48 bg-white/70 dark:bg-black/70 backdrop-blur-xl border border-black/10 dark:border-white/20 rounded-2xl p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 shadow-2xl z-50 text-black dark:text-white">
+                <a href="/articles" class="block px-4 py-3 hover:bg-black/5 dark:hover:bg-white/10 rounded-xl transition text-center" style="text-transform: none !important;">Articles</a>
+                <a href="/around-you" class="block px-4 py-3 hover:bg-black/5 dark:hover:bg-white/10 rounded-xl transition text-center" style="text-transform: none !important;">What’s Around You</a>
+            </div>
+        </div>
+
+        <div class="relative group">
+            <a href="#" class="nav-link hover:text-[#18eb9a] transition" style="text-transform: none !important;">From You</a>
+            <div class="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-48 bg-white/70 dark:bg-black/70 backdrop-blur-xl border border-black/10 dark:border-white/20 rounded-2xl p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 shadow-2xl z-50 text-black dark:text-white">
+                <a href="/write-a-story" class="block px-4 py-3 hover:bg-black/5 dark:hover:bg-white/10 rounded-xl transition text-center" style="text-transform: none !important;">Share Your Thought</a>
+                <a href="/red-letter" class="block px-4 py-3 hover:bg-black/5 dark:hover:bg-white/10 rounded-xl transition text-center" style="text-transform: none !important;">Red Letter : The Unsent</a>
+                <a href="/submit-event" class="block px-4 py-3 hover:bg-black/5 dark:hover:bg-white/10 rounded-xl transition text-center" style="text-transform: none !important;">Submit An Event/Place</a>
+            </div>
+        </div>
+
+       <div class="relative group">
+    <a href="#" class="nav-link hover:text-[#18eb9a] transition" style="text-transform: none !important;">Product</a>
+     <div class="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-48 bg-white/70 dark:bg-black/70 backdrop-blur-xl border border-black/10 dark:border-white/20 rounded-2xl p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 shadow-2xl z-50 text-black dark:text-white">
+        
+        <a href="/product?filter=Digital Product" class="block px-4 py-3 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition text-center" style="text-transform: none !important;">Product Catalog</a>
+        
+        <a href="/product?filter=Journal %26 Kit" class="block px-4 py-3 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition text-center" style="text-transform: none !important;">Journal & Kit</a>
+        
+        <a href="/product?filter=Merchandise" class="block px-4 py-3 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition text-center" style="text-transform: none !important;">Merchandise</a>
+        
+        <a href="/product" class="block px-4 py-3 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition text-center" style="text-transform: none !important;">All Products</a>
+    </div>
+</div>
+
+
+        <div class="relative group">
+            <a href="/write-a-story" class="nav-link hover:text-[#18eb9a] transition" style="text-transform: none !important;">Write Now</a>
+        </div>
+    </div>
+</nav>
+    </header>
+    
+    <main class="pt-60 pb-20 px-6">
+        <section class="max-w-4xl mx-auto text-center mb-20">
+            <h1 class="text-5xl md:text-7xl font-black tracking-tighter uppercase mb-6">
+               Speak the unspoken. <span class="font-black  uppercase" style="color: #ca1c1d;">
+    Your Secret
+</span> Red Letter starts here.
+            </h1>
+            <div class="flex flex-wrap justify-center items-center gap-4">
+                <button onclick="location.reload()" class="p-4 rounded-full glass-card hover:bg-white hover:text-black transition duration-500 border border-white/10 flex items-center justify-center group" title="Refresh Stories">
+                    <svg class="w-5 h-5 group-hover:rotate-[-180deg] transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                    </svg>
+                </button>
+
+                <button onclick="openModal('formModal')" class="bg-white text-black px-10 py-4 rounded-full font-black uppercase text-xs tracking-widest hover:bg-[#ff4d4d] hover:text-white transition duration-500 shadow-lg shadow-white/5">
+                   Whisper Yours
+                </button>
+                
+                <button onclick="openModal('searchModal')" class="glass-card px-10 py-4 rounded-full font-black uppercase text-xs tracking-widest hover:bg-white/10 transition duration-500 border border-white/10">
+                    Browse the whispers
+                </button>
+            </div>
+        </section>
+
+        <div id="letterSwiperSection" class="swiper-container">
+            <div id="letterFeed" class="swiper-track"></div>
+        </div>
+        <br>
+        <br>
+        <br>
+        <section class="max-w-7xl mx-auto mt-30 px-4">
+            <div class="text-center mb-16">
+                <p class="text-white/20 text-[10px] font-black uppercase tracking-[0.5em] mb-2">Public Mailboxes</p>
+                <h2 class="text-3xl md:text-4xl font-black uppercase tracking-tight leading-tight extra-word-spacing">
+    Every 
+    <span class="red-gradient-text" style="color: #ca1c1d; background: none; -webkit-background-clip: initial; background-clip: initial; -webkit-text-fill-color: initial;">
+        unspoken quarter life struggle
+    </span> 
+    has found a safe place here.
+</h2>
+                <div class="w-12 h-[2px] bg-white/10 mx-auto mt-6 rounded-full"></div>
+            </div>
+
+            <div id="allLettersGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                </div>
+        </section>
+    </main>
+<div id="formModal" class="fixed inset-0 z-[200] flex items-center justify-center p-6 modal-overlay hidden-modal">
+    <div class="absolute inset-0 bg-black/90 dark:bg-black/90 backdrop-blur-md" onclick="closeModal('formModal')"></div>
+    
+    <div class="glass-card p-10 w-full max-w-xl relative modal-content border-white/10 bg-white/90 max-h-[90vh] overflow-y-auto custom-scrollbar">
+        
+        <h3 class="text-2xl font-black uppercase mb-8 !text-[#f4f4f4] !opacity-100">
+            NEW LETTER
+        </h3>
+        
+        <div class="space-y-5">
+            <input type="text" id="toName" placeholder="Recipient Name..." class="input-style text-sm !text-white placeholder:text-white/50">
+            
+            <textarea id="message" rows="8" placeholder="Your secret message..." class="input-style text-sm resize-none !text-white placeholder:text-white/50"></textarea>
+            
+            <div id="spotifySearchContainer" class="relative z-[300]">
+                <input type="text" id="spotifySearchInput" placeholder="Search a song for your letter..." class="input-style text-sm !text-black placeholder:text-black/30 !bg-[#f3f4f6] !border-[#d1d5db] focus:!border-[#ff4d4d]" autocomplete="off">
+                <input type="hidden" id="spotifyLink"> <!-- Keeps original ID to avoid breaking code -->
+                <div id="spotifyDropdown" class="absolute left-0 right-0 mt-2 bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-2xl hidden max-h-[260px] overflow-y-auto custom-scrollbar z-[500] transition-all duration-300">
+                    <div class="p-6 text-center text-gray-400 text-[11px] font-black uppercase tracking-[0.2em]">Searching for magic...</div>
+                </div>
+            </div>
+            
+            <div id="spotifyPreview" class="hidden rounded-[1.5rem] overflow-hidden border border-[#e5e7eb] bg-[#f9fafb] p-4 flex items-center justify-between transition-all duration-500 hover:border-[#ff4d4d]/30">
+                <div class="flex items-center gap-5 w-full pl-1">
+                    <div class="relative group/thumb shrink-0">
+                        <img id="spImg" src="" class="w-16 h-16 rounded-xl shadow-md bg-gray-100 object-cover transition-transform duration-500 group-hover/thumb:scale-105">
+                        <div class="absolute inset-0 bg-black/5 rounded-xl opacity-0 group-hover/thumb:opacity-100 transition-opacity"></div>
+                    </div>
+                    <div class="flex-1 min-w-0 pr-4">
+                        <p id="spTitle" class="text-black text-base font-extrabold truncate mb-0.5" style="color: #000000 !important;"></p>
+                        <div class="flex items-center gap-2">
+                             <p id="spArtist" class="text-gray-500 text-[11px] font-black uppercase tracking-wider truncate" style="color: #6b7280 !important;"></p>
+                        </div>
+                    </div>
+                    <button onclick="clearSpotifySelection()" class="p-3 bg-gray-100/50 hover:bg-red-50 text-gray-400 hover:text-[#ff4d4d] rounded-full transition-all duration-300">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4 mt-6">
+                <button onclick="saveRedLetter()" class="bg-[#ff4d4d] text-white py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl shadow-red-500/20 hover:scale-105 transition">Post Letter</button>
+                <button onclick="openModal('confirmModal')" class="bg-white/5 border border-black/10 dark:border-white/10 py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-black/5 dark:hover:bg-white/10 transition !text-white">Burn Letter</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="confirmModal" class="fixed inset-0 z-[300] flex items-center justify-center p-6 modal-overlay hidden-modal">
+    <div class="absolute inset-0 bg-black/95 backdrop-blur-xl"></div>
+    <div class="glass-card p-12 w-full max-w-md relative modal-content text-center border-white/10">
+        <div class="w-16 h-16 bg-[#ff4d4d]/10 rounded-full flex items-center justify-center mx-auto mb-6">
+            <svg class="w-8 h-8 text-[#ff4d4d]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.99 7.99 0 0120 13a7.99 7.99 0 01-2.343 5.657z"/></svg>
+        </div>
+       <h3 class="text-2xl font-black uppercase mb-4 !text-white">Are you ready to let go?</h3>
+<p id="burnText" class="!text-white text-sm mb-10 leading-relaxed font-medium">
+    </p>
+        <div class="flex flex-col gap-3">   
+            <button onclick="executeBurn()" class="w-full bg-[#ff4d4d] text-white py-4 rounded-xl font-black uppercase text-[10px] tracking-[0.3em] hover:bg-gray-200 hover:text-black transition">Yes, Burn it.</button>
+          <button onclick="closeModal('confirmModal')" class="w-full py-4 text-[9px] font-black uppercase tracking-widest !text-white !opacity-60 hover:!opacity-100 transition">
+    Cancel
+</button>
+        </div>
+    </div>
+</div>
+
+<div id="searchModal" class="fixed inset-0 z-[200] flex items-center justify-center p-6 modal-overlay hidden-modal">
+    <div class="absolute inset-0 bg-black/90 backdrop-blur-md" onclick="closeModal('searchModal')"></div>
+    <div class="glass-card p-12 w-full max-w-2xl relative modal-content text-center border-white/10">
+        <h3 class="text-3xl font-black uppercase mb-4 !text-[#f4f4f4] !opacity-100">
+            Find a Whisper
+        </h3>
+        <p class="text-sm mb-10 font-medium leading-relaxed !text-[#d1d1d1] !opacity-100">
+            "Find a whisper that feels like yours"
+        </p>
+        
+        <input type="text" id="searchBar" onkeyup="searchLetters()" placeholder="Type name..." 
+            class="input-style text-center text-xl py-6 border-white/20 focus:border-[#ff4d4d] !text-white placeholder:text-white/40">
+            
+        <button onclick="closeModal('searchModal')" 
+            class="mt-8 text-[10px] font-black uppercase tracking-[0.3em] !text-[#f4f4f4] !opacity-70 hover:!opacity-100 transition">
+            Close Search
+        </button>
+    </div>
+</div>
+<style>
+   /* Efek Hover untuk Tombol Mata */
+.preview-trigger {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    z-index: 10;
+    padding: 0.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 99px;
+    color: white;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(10px);
+}
+
+.card-wrapper:hover .preview-trigger {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.preview-trigger:hover {
+    background: #ff4d4d;
+    border-color: #ff4d4d;
+    color: white;
+}
+
+/* Modal Preview Styling */
+.hidden-modal {
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+}
+
+.modal-overlay {
+    transition: all 0.5s ease;
+}
+
+.modal-content {
+    transform: scale(0.9) translateY(20px);
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+#previewModal:not(.hidden-modal) .modal-content {
+    transform: scale(1) translateY(0);
+}
+</style>
+<div id="previewModal" class="fixed inset-0 z-[10000] hidden-modal modal-overlay overflow-y-auto overflow-x-hidden transition-all duration-500">
+    <div class="fixed inset-0 bg-black/80 backdrop-blur-xl" onclick="closePreview()"></div>
+    
+    <div class="relative min-h-screen flex items-center justify-center p-4 md:p-8 pointer-events-none">
+        
+        <div class="relative w-full max-w-lg z-10 modal-content pointer-events-auto transition-transform duration-500">
+            
+           
+
+            <div id="previewContainer" class="w-full"></div>
+        </div>
+    </div>
+</div>
+    <script>
+        /** Shared across script blocks: top-level const in one script is not visible in the next. */
+        window.API_URL = typeof window.API_BASE_URL !== 'undefined'
+            ? String(window.API_BASE_URL).replace(/\/+$/, '')
+            : 'http://localhost:5000';
+
+        function escapeHtml(value) {
+            return String(value == null ? '' : value)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function safeTrackId(value) {
+            const raw = String(value || '').trim();
+            const match = raw.match(/track\/([a-zA-Z0-9]+)|^([a-zA-Z0-9]{8,64})$/);
+            return match ? (match[1] || match[2] || '') : '';
+        }
+
+        function safeImageSrc(value) {
+            const src = String(value || '').trim();
+            if (!src) return 'assets/Branch.png';
+            if (/^(https?:)?\/\//i.test(src) || /^assets\//i.test(src) || /^\/uploads\//i.test(src)) return src;
+            return 'assets/Branch.png';
+        }
+
+        function openModal(id) { 
+            if (id === 'confirmModal') setRandomBurnText();
+            document.getElementById(id).classList.remove('hidden-modal'); 
+        }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden-modal'); }
+
+        function extractSpotifyId(url) {
+            const match = url.match(/track\/([a-zA-Z0-9]+)/);
+            return match ? match[1] : url; // If not a URL, assume it's an ID
+        }
+// Function removed to avoid duplication with the more complete version below
+
+        let letters = [];
+        let currentPage = 1;
+        const limit = 9;
+
+        async function loadLetters(append = false) {
+            try {
+                const res = await fetch(`${window.API_URL}/api/red-letters?page=${currentPage}&limit=${limit}`, { cache: 'no-store' });
+                const data = await res.json().catch(function () { return {}; });
+                if (!res.ok) {
+                    throw new Error(data.message || data.error || res.statusText || String(res.status));
+                }
+                var incoming = Array.isArray(data) ? data : (data.letters || data.data || []);
+                var list = Array.isArray(incoming) ? incoming : [];
+                list = list
+                    .map(function (item) {
+                        return {
+                            id: item.id,
+                            to: item.to || item.title || 'Anonymous',
+                            msg: item.msg || item.message || item.content || '',
+                            message: item.message || item.msg || item.content || '',
+                            track: item.track || item.meta1 || '',
+                            date: item.date || '',
+                            created_at: item.created_at || null
+                        };
+                    })
+                    .sort(function (a, b) {
+                        var ta = a.created_at ? new Date(a.created_at).getTime() : 0;
+                        var tb = b.created_at ? new Date(b.created_at).getTime() : 0;
+                        if (tb !== ta) return tb - ta;
+                        return Number(b.id || 0) - Number(a.id || 0);
+                    });
+                if (append) {
+                    letters = letters.concat(list);
+                } else {
+                    letters = list;
+                }
+
+                renderLetters();
+
+                const loadMoreBtn = document.getElementById('loadMoreContainer');
+                var hasMore = Array.isArray(data) ? list.length >= limit : !!data.hasMore;
+                if (loadMoreBtn) {
+                    if (hasMore) loadMoreBtn.classList.remove('hidden');
+                    else loadMoreBtn.classList.add('hidden');
+                }
+            } catch (err) {
+                console.error("Failed to load whispers:", err);
+                const grid = document.getElementById('allLettersGrid');
+                grid.innerHTML = `<p class="col-span-full text-center text-red-500/50 uppercase tracking-widest py-20 font-black">Connection to whispers failed. Let's try refreshing.</p><p class="col-span-full text-center text-red-500/30 text-[11px] font-bold">${escapeHtml(err.message || '')}</p>`;
+            }
+        }
+
+        function renderLetters() {
+            const track = document.getElementById('letterFeed');
+            const grid = document.getElementById('allLettersGrid');
+            
+            track.innerHTML = '';
+            grid.innerHTML = '';
+
+            if (letters.length === 0) {
+                grid.innerHTML = `<p class="col-span-full text-center text-white/10 uppercase tracking-widest py-20 font-bold">No whispers found yet...</p>`;
+                return;
+            }
+
+            // Render ke Swiper (Animasi)
+            const swiperHTML = letters.slice(0, 10).map(item => `
+                <div class="card-fixed">${createCardHTML(item)}</div>
+            `).join('');
+            track.innerHTML = swiperHTML + swiperHTML; 
+
+            // Render ke Grid
+            grid.innerHTML = letters.map(item => createCardHTML(item)).join('');
+        }
+
+        async function saveRedLetter() {
+            const to = document.getElementById('toName').value;
+            const msg = document.getElementById('message').value;
+            const trackId = document.getElementById('spotifyLink').value;
+
+            if (!to || !msg || !trackId) {
+                alert('Every whisper needs a soul: Please fill in the recipient, message, and select a song.');
+                return;
+            }
+
+            try {
+                const res = await fetch(`${window.API_URL}/api/red-letters`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ to, message: msg, track: trackId })
+                });
+
+                if (res.ok) {
+                    closeModal('formModal');
+                    currentPage = 1;
+                    await loadLetters();
+                    document.getElementById('toName').value = '';
+                    document.getElementById('message').value = '';
+                    clearSpotifySelection();
+                } else {
+                    alert('Integration failed. Please try again.');
+                }
+            } catch (err) {
+                alert('Failed to release your whisper. Please try again.');
+            }
+        }
+
+        function searchLetters() {
+            const query = document.getElementById('searchBar').value.toLowerCase().trim();
+            const filtered = letters.filter(l => (l.to || '').toLowerCase().includes(query));
+            
+            const track = document.getElementById('letterFeed');
+            const swiperSection = document.getElementById('letterSwiperSection');
+            if (query !== '') {
+                if (track) track.style.animation = 'none';
+                if (swiperSection) swiperSection.classList.add('hidden');
+                renderLettersByData(filtered);
+            } else {
+                if (swiperSection) swiperSection.classList.remove('hidden');
+                if (track) track.style.animation = 'scroll 100s linear infinite';
+                renderLetters();
+            }
+        }
+
+        /** Hanya isi grid — jangan duplikat ke swiper (#letterFeed) supaya tidak dua box saat browse/search. */
+        function renderLettersByData(data) {
+            const grid = document.getElementById('allLettersGrid');
+            const track = document.getElementById('letterFeed');
+            if (track) track.innerHTML = '';
+            if (!grid) return;
+            if (!data.length) {
+                grid.innerHTML = `<p class="col-span-full text-center text-white/10 uppercase tracking-widest py-20 font-bold">No matching whispers...</p>`;
+                return;
+            }
+            grid.innerHTML = data.map(item => createCardHTML(item)).join('');
+        }
+
+        // Initial Load
+        loadLetters();
+       let isMatchLit = false;
+       
+
+// 1. Inisialisasi Canvas Global
+const canvas = document.createElement('canvas');
+canvas.id = 'fireCanvas';
+// Paksa posisi paling depan dengan z-index super tinggi
+canvas.style.cssText = 'position:fixed; top:0; left:0; width:100vw; height:100vh; pointer-events:none; z-index:999999; opacity:1;';
+document.body.appendChild(canvas);
+
+const ctx = canvas.getContext('2d');
+let particles = [];
+let isBurning = false;
+
+// Pastikan ukuran canvas pas
+function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resize);
+resize();
+
+// 2. Definisi Partikel Api
+class FireParticle {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.vx = (Math.random() - 0.5) * 4;
+        this.vy = -(Math.random() * 8 + 3);
+        this.life = Math.random() * 50 + 30;
+        this.maxLife = this.life;
+        this.size = Math.random() * 15 + 5;
+    }
+    update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.life--;
+        this.size *= 0.96;
+    }
+    draw() {
+        const ratio = this.life / this.maxLife;
+        const hue = ratio * 50; // 50 (Kuning) ke 0 (Merah)
+        ctx.fillStyle = `hsla(${hue}, 100%, 60%, ${ratio})`;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+    }
+}
+
+// 3. Loop Animasi
+function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Efek layar memerah jika api banyak
+    if (particles.length > 500) {
+        ctx.fillStyle = 'rgba(255, 69, 0, 0.3)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+
+    particles.forEach((p, i) => {
+        p.update();
+        p.draw();
+        if (p.life <= 0) particles.splice(i, 1);
+    });
+    requestAnimationFrame(animate);
+}
+// Jalankan loop animasi terus-menerus di background
+animate();
+
+window.executeBurn = function() {
+    if (window.closeModal) closeModal('confirmModal');
+    
+    const target = document.querySelector('#formModal .modal-content');
+    if (!target) return;
+
+    // 1. SET CANVAS KE BELAKANG MODAL
+    canvas.style.zIndex = '9980'; 
+    target.style.zIndex = '9999'; 
+    target.style.position = 'relative';
+
+    target.style.transition = 'box-shadow 4s ease-out, transform 8s ease-in, opacity 8s ease-in';
+    
+    target.classList.add('burning-target');
+    isBurning = true;
+
+    let progress = 0;
+    const burnInterval = setInterval(() => {
+        progress += 0.005;
+        const rect = target.getBoundingClientRect();
+
+        // 2. MUNCULKAN CAHAYA DI BELAKANG SAAT TERBAKAR
+        if (progress > 0.3) {
+            canvas.style.transition = 'opacity 2s ease';
+            canvas.style.opacity = '1';
+            canvas.style.background = `radial-gradient(circle at center, rgba(255, 100, 0, ${progress * 0.8}) 0%, rgba(20, 5, 0, ${progress}) 70%)`;
+        }
+        
+        // Partikel Abu
+        if (progress < 1.1) {
+            for (let i = 0; i < 5; i++) {
+                particles.push(new AshParticle(
+                    rect.left + Math.random() * rect.width,
+                    rect.top + Math.random() * rect.height
+                ));
+            }
+        }
+
+        if (progress >= 1.5) clearInterval(burnInterval);
+    }, 30);
+
+    // --- LOGIKA BARU: POP-UP SETELAH CAHAYA OREN SELESAI ---
+    setTimeout(() => { 
+        // 1. Sembunyikan canvas/efek api perlahan
+        canvas.style.transition = 'opacity 1.5s ease';
+        canvas.style.opacity = '0';
+
+        // 2. Munculkan Custom Pop-up (Detik ke-7)
+        const overlay = document.getElementById('burnSuccessOverlay');
+        if (overlay) {
+            overlay.classList.add('show');
+        } else {
+            // Backup jika ID overlay tidak ditemukan (pakai alert biasa)
+            alert("It’s gone now. Take a breath… your journey continues. We’re walking with you.");
+            location.reload();
+        }
+    }, 7000); // Muncul tepat di detik ke-7
+};
+function createCardHTML(item) {
+    const itemData = encodeURIComponent(JSON.stringify(item));
+    const trackId = safeTrackId(item && (item.track || item.meta1));
+    const safeTo = escapeHtml(item && item.to);
+    const safeDate = escapeHtml(item && item.date);
+    const safeMessage = escapeHtml(item && (item.msg || item.message));
+    
+    return `
+        <div class="card-wrapper h-full group">
+            <div class="glass-card p-8 flex flex-col rounded-2xl h-full border border-white/5 bg-white/[0.02] overflow-hidden relative transition-all duration-500 hover:bg-white/[0.05] hover:border-white/10 shadow-2xl">
+                
+                <div class="flex justify-between items-start mb-6">
+                    <div style="max-width: 65%; overflow: hidden;">
+                        <p class="text-[10px] font-black uppercase tracking-widest text-[#ff4d4d] mb-1 ">Dear</p>
+                        <h4 class="text-2xl font-black  uppercase tracking-tighter text-white whitespace-nowrap overflow-hidden text-ellipsis">
+                            ${safeTo}
+                        </h4>
+                    </div>
+
+                    <div class="flex flex-col items-end gap-3">
+                        <span class="text-[9px] font-bold opacity-20 uppercase tracking-tighter relative -left-3.5 inline-block">${safeDate}</span>
+                    <button onclick="openPreview('${itemData}')" 
+        class="p-3 rounded-full bg-white/5 border border-white/10 text-white/40 hover:text-[#ff4d4d] hover:bg-[#ff4d4d]/10 hover:border-[#ff4d4d]/30 transition-all duration-300 shadow-lg group-hover:scale-110 flex items-center justify-center" 
+        title="Preview Letter">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+        </svg>
+    </button>
+                    </div>
+                </div>
+                
+                <p class="text-xl md:text-2xl opacity-100 mb-8 flex-grow leading-relaxed  text-white" 
+                    style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; word-break: break-all; font-family: 'Caveat', cursive;">
+                    "${safeMessage}"
+                </p>
+                
+                ${trackId ? `
+                    <div class="rounded-2xl overflow-hidden border border-white/5 bg-black/30 group-hover:border-[#ff4d4d]/20 transition-colors">
+                        <iframe src="https://open.spotify.com/embed/track/${trackId}?utm_source=generator&theme=0" 
+                            width="100%" height="80" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                    </div>
+                ` : `
+                    <div class="rounded-2xl overflow-hidden border border-white/5 bg-black/20 p-4">
+                        <p class="text-[10px] font-black uppercase tracking-widest text-white/30">No track attached</p>
+                    </div>
+                `}
+            </div>
+        </div>
+    `;
+}
+
+function openPreview(encodedData) {
+    const item = JSON.parse(decodeURIComponent(encodedData));
+    const container = document.getElementById('previewContainer');
+    
+    // WAJIB: Simpan data ke window agar bisa dibaca saat klik Read More
+    window.currentActiveLetter = item;
+
+    // Deteksi Mode
+    const isDarkMode = document.documentElement.classList.contains('dark') || 
+                       document.body.classList.contains('dark');
+
+    // Variabel Glassmorphism Responsif
+    const glassBg = isDarkMode ? 'rgba(10, 10, 10, 0.9)' : 'rgba(255, 255, 255, 0.7)';
+    const textColor = isDarkMode ? '#ffffff' : '#1a1a1a';
+    const subTextOpacity = isDarkMode ? 'text-white/30' : 'text-black/30';
+    const borderColor = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)';
+    const spotifyBg = isDarkMode ? 'bg-black/40' : 'bg-white/40';
+    const safeTo = escapeHtml(item && item.to);
+    const safeDate = escapeHtml(item && item.date);
+    const safeMsg = escapeHtml(item && item.msg);
+    const safeTrack = safeTrackId(item && item.track);
+
+    container.innerHTML = `
+        <div class="glass-card p-6 md:p-12 flex flex-col rounded-[2.5rem] shadow-2xl backdrop-blur-3xl transition-all duration-500 max-w-[95vw] md:max-w-[700px] mx-auto relative animate-fade-in"
+             style="background: ${glassBg}; border: 1px solid ${borderColor}; color: ${textColor};">
+            
+            <button onclick="closeModal('previewModal'); document.body.style.overflow = 'auto';" 
+                    class="absolute top-4 right-4 md:top-6 md:right-8 p-2 rounded-full transition-all hover:rotate-90 hover:scale-110 active:scale-95 group z-50">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" 
+                     stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" 
+                     class="opacity-30 group-hover:opacity-100 transition-opacity">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+
+            <div class="flex justify-between items-start mb-10 pr-12">
+                <div class="max-w-[70%] text-left">
+                    <p class="text-[10px] md:text-xs font-black uppercase tracking-[0.4em] text-[#ff4d4d] mb-3 text-glow">
+                        The Unsent Message
+                    </p>
+                    <h4 class="text-3xl md:text-5xl font-black uppercase tracking-tighter break-all leading-none"
+                        style="color: ${textColor};">
+                        To: ${safeTo}
+                    </h4>
+                </div>
+                <span class="text-[10px] font-bold ${subTextOpacity} uppercase tracking-widest pt-2 whitespace-nowrap">
+                    ${safeDate}
+                </span>
+            </div>
+            
+            <div class="mb-12 min-h-[150px] text-left">
+                <p class="text-3xl md:text-5xl leading-tight tracking-wide break-words overflow-wrap-anywhere" 
+                    style="word-break: break-word; font-family: 'Caveat', cursive; color: ${textColor}; opacity: 0.9; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis;">
+                    "${safeMsg}"
+                </p>
+            </div>
+
+            ${safeTrack ? `
+            <div class="rounded-3xl overflow-hidden border border-white/10 ${spotifyBg} p-1 shadow-inner">
+                <iframe src="https://open.spotify.com/embed/track/${safeTrack}?utm_source=generator&theme=0" 
+                    width="100%" height="152" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen" 
+                    class="rounded-2xl"></iframe>
+            </div>` : `
+            <div class="rounded-3xl overflow-hidden border border-white/10 ${spotifyBg} p-6 shadow-inner text-center">
+                <p class="text-[10px] font-black uppercase tracking-[0.3em] opacity-50">No track attached</p>
+            </div>`}
+
+            <div class="mt-8 text-center pb-2">
+                <button onclick="closeModal('previewModal'); setTimeout(openFullStory, 300);" 
+                        class="group inline-flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.5em] text-[#ff4d4d] hover:text-[#ff4d4d]/80 transition-all duration-300">
+                    <span class="border-b border-[#ff4d4d]/30 pb-1">Continue Reading</span>
+                    <span class="group-hover:translate-x-2 transition-transform">→</span>
+                </button>
+            </div>
+        </div>
+    `;
+    
+    document.getElementById('previewModal').classList.remove('hidden-modal');
+    document.body.style.overflow = 'hidden'; 
+}
+
+
+function openFullStory() {
+    const item = window.currentActiveLetter;
+    const storyContainer = document.getElementById('storyPreviewContainer');
+    
+    if(!item) return;
+
+    // Deteksi Mode (Tetap sama)
+    const isDarkMode = document.documentElement.classList.contains('dark') || 
+                       document.body.classList.contains('dark');
+
+    const longContent = escapeHtml(((item.msg || '') + "\n\n" + (item.fullMsg || "")).trim());
+
+    // Warna & Glassmorphism (Tetap sama, sesuai instruksi sebelumnya)
+    const glassBg = isDarkMode ? 'rgba(10, 10, 10, 0.8)' : 'rgba(255, 255, 255, 0.7)';
+    const textColor = isDarkMode ? '#f4f4f4' : '#1a1a1a';
+    const borderColor = isDarkMode ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)';
+
+    storyContainer.innerHTML = `
+        <div class="p-8 md:p-16 flex flex-col rounded-[3.5rem] shadow-2xl transition-all duration-500 max-w-[95vw] md:max-w-[750px] mx-auto relative overflow-hidden backdrop-blur-md pb-20" 
+             style="max-height: 80vh; background-color: ${glassBg}; border: 1px solid ${borderColor};">
+            
+            <button onclick="document.getElementById('storyModal').classList.add('hidden-modal'); document.body.style.overflow = 'auto';" 
+                    class="absolute top-6 right-8 md:top-10 md:right-12 p-2 rounded-full transition-all hover:rotate-90 hover:scale-110 active:scale-95 group z-50">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" 
+                     stroke="${textColor}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" 
+                     class="opacity-40 group-hover:opacity-100 transition-opacity">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+
+            <div class="mb-10 shrink-0 text-left pr-8">
+                <p class="text-[10px] font-black uppercase tracking-[0.5em] text-[#ff4d4d] mb-2 ">A Long Story To</p>
+                <h4 class="text-4xl md:text-6xl font-black uppercase tracking-tighter break-all leading-none text-left"
+                    style="color: ${textColor};">
+                    To: ${escapeHtml(item.to)}
+                </h4>
+            </div>
+
+            <div class="overflow-y-auto pr-4 custom-scroll mb-6 text-left" style="max-height: 55vh;">
+                <p class="text-3xl md:text-5xl leading-[1.4] break-words whitespace-pre-line" 
+                   style="font-family: 'Caveat', cursive; word-break: break-word; color: ${textColor}; opacity: 0.95;">
+                    "${longContent}"
+                </p>
+            </div>
+
+            <div class="mt-auto text-center shrink-0 pt-8 relative z-50">
+                <button onclick="document.getElementById('storyModal').classList.add('hidden-modal'); document.body.style.overflow = 'auto';" 
+                        class="text-[10px] font-black uppercase tracking-[0.4em] transition-all opacity-40 hover:opacity-100 hover:text-[#ff4d4d]"
+                        style="color: ${textColor};">
+                    ← Back to Dashboard
+                </button>
+            </div>
+        </div>
+    `;
+    
+    document.getElementById('storyModal').classList.remove('hidden-modal');
+}
+// Partikel Ash & Ember (Glow)
+class AshParticle {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.vx = (Math.random() - 0.5) * 4;
+        this.vy = -(Math.random() * 5 + 2);
+        this.life = Math.random() * 60 + 40;
+        this.maxLife = this.life;
+        this.size = Math.random() * 5 + 2;
+        this.isEmber = Math.random() > 0.8;
+        this.color = this.isEmber ? '#ff8c00' : '#222';
+    }
+    update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.life--;
+        this.size *= 0.98;
+    }
+    draw() {
+        const ratio = this.life / this.maxLife;
+        ctx.save();
+        if (this.isEmber) {
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = '#ff4500';
+            ctx.globalAlpha = ratio;
+        } else {
+            ctx.globalAlpha = ratio * 0.6;
+        }
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+    }
+}
+   const burnQuotes = [
+    "This won't be saved anywhere. It's just a space to release what's heavy. Once you let go, it disappears forever. Are you ready?"
+    
+];
+
+// Fungsi untuk mendapatkan teks acak
+function setRandomBurnText() {
+    const pTag = document.getElementById('burnText');
+    const randomIndex = Math.floor(Math.random() * burnQuotes.length);
+    pTag.innerText = burnQuotes[randomIndex];
+}
+
+// Modifikasi fungsi openModal yang sudah ada
+function openModal(id) {
+    if (id === 'confirmModal') {
+        setRandomBurnText(); // Ubah teks saat modal dibuka
+    }
+    document.getElementById(id).classList.remove('hidden-modal');
+}
+// Langsung jalankan saat DOM siap, tidak perlu menunggu semua aset
+document.addEventListener('DOMContentLoaded', () => {
+    const loader = document.getElementById('loader');
+    const logo = document.getElementById('loaderLogo');
+    
+    // Munculkan logo sedikit lebih cepat
+    setTimeout(() => {
+        logo.classList.remove('opacity-0', 'scale-90');
+        logo.classList.add('opacity-100', 'scale-100');
+    }, 100);
+
+    // Loader hilang dalam total 1 detik saja
+    setTimeout(() => {
+        loader.classList.add('opacity-0');
+        setTimeout(() => {
+            loader.style.display = 'none';
+        }, 300); // Waktu untuk transisi fade-out
+    }, 800); 
+});
+(function() {
+    const html = document.documentElement;
+
+    // 1. PAKSA LIGHT MODE SAAT PERTAMA MASUK
+    html.classList.remove('dark');
+    html.classList.add('light');
+
+    const setupRedLetterTheme = () => {
+        const sidebarPanel = document.getElementById('sidebarPanel');
+        const themeToggle = document.getElementById('themeToggle'); 
+        const closeSidebar = document.getElementById('closeSidebarBtn');
+
+        // --- HILANGKAN IKON BULAN (MOON) SAJA ---
+        const moonIcons = [document.getElementById('moonIcon'), document.getElementById('moonIconMobile')];
+        moonIcons.forEach(icon => {
+            if (icon) icon.style.display = 'none'; // Sembunyikan ikon bulan
+        });
+
+        // --- HILANGKAN TOGGLE DI LUAR SIDEBAR ---
+        const themeToggleMobile = document.getElementById('themeToggleMobile');
+        if (themeToggleMobile) themeToggleMobile.style.display = 'none';
+
+        // --- LOGIKA SEJAJARKAN (THEME SWITCH + CLOSE BTN) ---
+        let actionHeader = document.getElementById('sidebarActionHeader');
+        if (!actionHeader && sidebarPanel) {
+            actionHeader = document.createElement('div');
+            actionHeader.id = 'sidebarActionHeader';
+            actionHeader.style.cssText = `
+                position: absolute;
+                top: 24px;
+                right: 24px;
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                z-index: 100;
+            `;
+            sidebarPanel.appendChild(actionHeader);
+        }
+
+        if (themeToggle && actionHeader) {
+            themeToggle.style.display = 'flex';
+            themeToggle.style.position = 'static';
+            themeToggle.style.margin = '0';
+            
+            const svgIcon = themeToggle.querySelector('svg');
+            if (svgIcon) svgIcon.style.stroke = '#1a1a1a';
+            
+            actionHeader.appendChild(themeToggle);
+        }
+
+        if (closeSidebar && actionHeader) {
+            closeSidebar.style.display = 'flex';
+            closeSidebar.style.position = 'static';
+            closeSidebar.style.margin = '0';
+
+            const svgX = closeSidebar.querySelector('svg');
+            if(svgX) svgX.style.stroke = '#1a1a1a';
+
+            actionHeader.appendChild(closeSidebar);
+        }
+
+        // --- LOADER ADJUSTMENT (TIDAK DIUBAH) ---
+        const loader = document.getElementById('loader');
+        const loaderLogo = document.getElementById('loaderLogo');
+        if (loader) {
+            loader.style.backgroundColor = '#ffffff';
+            setTimeout(() => {
+                loader.style.opacity = '0';
+                setTimeout(() => { 
+                    loader.style.display = 'none'; 
+                    loader.remove(); 
+                }, 500);
+            }, 1500);
+        }
+        if (loaderLogo) {
+            loaderLogo.style.filter = 'invert(1) brightness(0)';
+            loaderLogo.style.opacity = '1';
+        }
+
+        // --- SIDEBAR LOGIC (TIDAK DIUBAH) ---
+        const openSidebar = document.getElementById('openSidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        if (closeSidebar) {
+            closeSidebar.addEventListener('click', () => {
+                sidebarOverlay.classList.add('opacity-0', 'pointer-events-none');
+                sidebarPanel.classList.add('-translate-x-full');
+                document.body.style.overflow = 'auto';
+            });
+        }
+
+        if (openSidebar) {
+            openSidebar.style.zIndex = '9999';
+            openSidebar.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                sidebarOverlay.classList.remove('opacity-0', 'pointer-events-none');
+                sidebarPanel.classList.remove('-translate-x-full');
+                document.body.style.overflow = 'hidden';
+            });
+        }
+    };
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', setupRedLetterTheme);
+    } else {
+        setupRedLetterTheme();
+    }
+})();
+
+        themeToggles.forEach(btn => {
+            btn?.addEventListener('click', () => applyTheme(!html.classList.contains('dark')));
+        });
+
+       // 2. Sidebar & Search Logic
+const openSidebar = document.getElementById('openSidebar');
+// Sesuaikan ID di bawah ini dengan ID tombol close baru kita
+const closeSidebar = document.getElementById('closeSidebarBtn'); 
+const sidebarOverlay = document.getElementById('sidebarOverlay');
+const sidebarPanel = document.getElementById('sidebarPanel');
+
+// Fungsi Membuka Sidebar
+openSidebar.onclick = () => {
+    sidebarOverlay.classList.remove('opacity-0', 'pointer-events-none');
+    sidebarPanel.classList.remove('-translate-x-full');
+};
+
+// Fungsi Menutup Sidebar
+const hideSidebar = () => {
+    sidebarOverlay.classList.add('opacity-0', 'pointer-events-none');
+    sidebarPanel.classList.add('-translate-x-full');
+};
+
+// Event Listener untuk Tombol Close
+if (closeSidebar) {
+    closeSidebar.onclick = hideSidebar;
+}
+
+// Event Listener untuk klik di luar Sidebar (Overlay)
+sidebarOverlay.onclick = (e) => { 
+    if(e.target === sidebarOverlay) hideSidebar(); 
+};
+
+// 3. Logic Utama Letters & Burn (Masukkan fungsi Anda di sini)
+// ... (renderLetters, saveRedLetter, executeBurn) ...
+
+// Initial Load
+const savedTheme = localStorage.getItem('theme') || 'dark';
+if (typeof applyTheme === 'function') {
+    applyTheme(savedTheme === 'dark');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Loader logic...
+});
+</script>
+<script>
+    // --- SPOTIFY SEARCH INTEGRATION ---
+    var API_URL = window.API_URL !== undefined ? window.API_URL : 'http://localhost:5000';
+    let spotifySearchTimeout = null;
+    const spInput = document.getElementById('spotifySearchInput');
+    const spDropdown = document.getElementById('spotifyDropdown');
+    const spHidden = document.getElementById('spotifyLink');
+    const spPreview = document.getElementById('spotifyPreview');
+    const spContainer = document.getElementById('spotifySearchContainer');
+
+    if (spInput) {
+        spInput.addEventListener('input', function() {
+            clearTimeout(spotifySearchTimeout);
+            const query = this.value.trim();
+            if (query.length < 2) { 
+                spDropdown.classList.add('hidden'); 
+                return; 
+            }
+            spDropdown.classList.remove('hidden');
+            spDropdown.innerHTML = `<div class="p-6 text-center text-[#ff4d4d] text-[10px] font-black uppercase tracking-[0.2em] animate-pulse">Searching for magic...</div>`;
+
+            spotifySearchTimeout = setTimeout(async () => {
+                try {
+                    const res = await fetch(`${API_URL}/api/spotify/search?q=${encodeURIComponent(query)}&limit=10`);
+                    const payload = await res.json().catch(function () { return null; });
+                    if (!res.ok) {
+                        var errMsg = (payload && (payload.message || payload.error)) ? String(payload.message || payload.error) : 'Server error';
+                        spDropdown.innerHTML = `<div class="p-6 text-center text-red-500 text-[10px] font-black uppercase tracking-[0.2em]">${escapeHtml(errMsg)}</div>`;
+                        return;
+                    }
+                    var tracks = Array.isArray(payload)
+                        ? payload
+                        : (Array.isArray(payload && payload.tracks) ? payload.tracks : []);
+                    if (tracks.length === 0) {
+                        spDropdown.innerHTML = `<div class="p-6 text-center text-gray-400 text-[10px] font-black uppercase tracking-[0.2em]">No souls found...</div>`;
+                        return;
+                    }
+
+                    spDropdown.innerHTML = tracks.map(track => `
+                         <div class="p-4 hover:bg-gray-50 cursor-pointer flex items-center gap-5 transition-all duration-300 border-b border-gray-100 last:border-0 group/item" 
+                              data-id="${track.id}" 
+                              data-name="${escapeHtml(track.name).replace(/"/g, '&quot;')}" 
+                              data-artist="${escapeHtml(track.artist).replace(/"/g, '&quot;')}" 
+                              data-image="${safeImageSrc(track.image)}"
+                              onclick="selectSpotifyTrack(this.dataset.id, this.dataset.name, this.dataset.artist, this.dataset.image)">
+                            <div class="relative shrink-0 overflow-hidden rounded-xl shadow-sm" style="width: 56px; height: 56px;">
+                                <img src="${safeImageSrc(track.image)}" style="width: 100%; height: 100%; object-fit: cover;">
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <h4 class="text-black text-sm font-extrabold truncate text-left mb-1" style="color:#000!important">${escapeHtml(track.name)}</h4>
+                                <p class="text-gray-400 text-[10px] font-black tracking-[0.1em] truncate text-left" style="color:#9ca3af!important">${escapeHtml(track.artist)}</p>
+                            </div>
+                        </div>
+                    `).join('');
+                } catch (err) {
+                    spDropdown.innerHTML = `<div class="p-6 text-center text-red-500 text-[10px] font-black uppercase tracking-[0.2em]">Connection lost...</div>`;
+                }
+            }, 600);
+        });
+
+        document.addEventListener('click', (e) => {
+            if (spDropdown && !spDropdown.contains(e.target) && e.target !== spInput) {
+                spDropdown.classList.add('hidden');
+            }
+        });
+    }
+
+    window.selectSpotifyTrack = function(id, name, artist, image) {
+        spHidden.value = id;
+        spInput.value = "";
+        spContainer.classList.add('hidden');
+        spDropdown.classList.add('hidden');
+        spPreview.classList.remove('hidden');
+        document.getElementById('spImg').src = safeImageSrc(image);
+        document.getElementById('spTitle').textContent = name;
+        document.getElementById('spArtist').textContent = artist;
+    };
+
+    window.clearSpotifySelection = function() {
+        spHidden.value = '';
+        spContainer.classList.remove('hidden');
+        spPreview.classList.add('hidden');
+        spInput.focus();
+    };
+</script>
+<div id="storyModal" class="fixed inset-0 z-[300] flex items-center justify-center p-6 modal-overlay hidden-modal">
+    <div class="absolute inset-0 bg-black/95 backdrop-blur-xl" onclick="document.getElementById('storyModal').classList.add('hidden-modal')"></div>
+    <div id="storyPreviewContainer" class="w-full relative modal-content max-w-[800px]"></div>
+</div>
+<div id="burnSuccessOverlay" class="fixed inset-0 z-[99999] flex items-center justify-center bg-black/80 backdrop-blur-xl opacity-0 pointer-events-none transition-all duration-1000 font-['Plus_Jakarta_Sans',sans-serif]">
+    <div class="text-center p-10 bg-white/5 border border-white/10 rounded-[2rem] shadow-2xl max-w-sm mx-4 transform scale-90 transition-transform duration-700">
+        <div class="w-16 h-16 bg-[#18eb9a]/10 rounded-full flex items-center justify-center mx-auto mb-8 border border-[#18eb9a]/20">
+            <svg class="w-8 h-8 text-[#18eb9a]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+            </svg>
+        </div>
+        
+        <p class="text-[#18eb9a] text-[10px] font-black uppercase tracking-[0.4em] mb-4">Released</p>
+        <h2 class="text-[#FFFFFF] text-xl font-medium leading-relaxed mb-10">
+            "It’s gone now. Take a breath… your journey continues. We’re walking with you."
+        </h2>
+        
+        <button onclick="window.location.reload()" class="w-full py-4 bg-[#18eb9a] hover:bg-[#12b376] text-black text-[11px] font-black uppercase tracking-[0.2em] rounded-2xl transition-all hover:scale-105 active:scale-95 shadow-[0_10px_30px_rgba(24,235,154,0.3)]">
+            Keep Moving Forward
+        </button>
+    </div>
+</div>
+</body>
+</html>

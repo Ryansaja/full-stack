@@ -1,13 +1,13 @@
 const { query } = require('../config/db');
-const { sanitizeText, sanitizeEmail, sanitizeAssetUrl, sanitizeStatus, parseBoolean } = require('../utils/sanitize');
+const { sanitizeText, sanitizeHtml, sanitizeEmail, sanitizeAssetUrl, sanitizeStatus, parseBoolean } = require('../utils/sanitize');
 const { safeDeleteUpload, toStoredUploadUrl } = require('../utils/files');
 
 function serializeArticle(row) {
   return {
     id: row.id,
     title: sanitizeText(row.title, { maxLength: 255 }),
-    content: sanitizeText(row.content || '', { allowNewlines: true, maxLength: 20000 }),
-    description: sanitizeText(row.description || '', { allowNewlines: true, maxLength: 1000 }),
+    content: sanitizeHtml(row.content || '', { maxLength: 50000 }),
+    description: sanitizeHtml(row.description || '', { maxLength: 50000 }),
     category: sanitizeText(row.category || '', { maxLength: 255 }),
     meta1: sanitizeText(row.meta1 || '', { maxLength: 255 }),
     meta2: sanitizeText(row.meta2 || '', { maxLength: 255 }),
@@ -25,9 +25,9 @@ function serializeArticle(row) {
 function articlePayload(req, existing = {}) {
   const nextImage = req.file ? toStoredUploadUrl(req.file) : undefined;
   const title = sanitizeText(req.body.title || existing.title, { maxLength: 255 });
-  const content = sanitizeText(req.body.content ?? existing.content, { allowNewlines: true, maxLength: 20000 });
+  const content = sanitizeHtml(req.body.content ?? existing.content, { maxLength: 50000 });
   const descriptionSource = req.body.description !== undefined ? req.body.description : existing.description;
-  const description = sanitizeText(descriptionSource || content, { allowNewlines: true, maxLength: 1000 });
+  const description = sanitizeHtml(descriptionSource || content, { maxLength: 50000 });
   const category = sanitizeText(req.body.category || existing.category, { maxLength: 255 }) || 'Drafts';
 
   return {

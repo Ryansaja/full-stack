@@ -21,7 +21,23 @@ async function migrate() {
 
   try {
     console.log('Adding is_recommended column to articles table...');
-    await pool.query('ALTER TABLE articles ADD COLUMN is_recommended TINYINT(1) DEFAULT 0');
+    await pool.query('ALTER TABLE articles ADD COLUMN is_recommended TINYINT(1) DEFAULT 0').catch(err => {
+      if (err.code !== 'ER_DUP_COLUMN_NAME') throw err;
+      console.log('Column is_recommended already exists.');
+    });
+
+    console.log('Creating ads table...');
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS \`ads\` (
+        \`id\` INT AUTO_INCREMENT PRIMARY KEY,
+        \`image_url\` VARCHAR(255) NOT NULL,
+        \`link_url\` VARCHAR(255) NOT NULL,
+        \`status\` ENUM('active', 'inactive') DEFAULT 'active',
+        \`created_at\` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        \`updated_at\` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+      )
+    `);
+
     console.log('Migration successful!');
   } catch (error) {
     if (error.code === 'ER_DUP_COLUMN_NAME') {

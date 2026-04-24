@@ -8,9 +8,14 @@ const redLetterRoutes = require('./routes/redLetterRoutes');
 const productRoutes = require('./routes/productRoutes');
 const eventRoutes = require('./routes/eventRoutes');
 const spotifyRoutes = require('./routes/spotifyRoutes');
+const adRoutes = require('./routes/adRoutes');
 const { createRateLimiter } = require('./middlewares/rateLimitMiddleware');
 
 const app = express();
+
+// WAJIB KETIKA MENGGUNAKAN CLOUDFLARE/PROXY
+// Agar Rate Limiter berjalan normal dan tidak memblokir semua request karena IP Cloudflare
+app.set('trust proxy', 1);
 
 function isAllowedOrigin(origin) {
   if (!origin || origin === 'null') return true;
@@ -57,12 +62,28 @@ app.use('/uploads', express.static(path.join(__dirname, '../uploads'), {
   fallthrough: false
 }));
 
+// Clean URLs: strip .html extension from incoming requests (301 redirect)
+app.use((req, res, next) => {
+  // Only redirect GET requests for .html files (skip API, uploads, assets)
+  if (req.method === 'GET' && req.path.endsWith('.html') && !req.path.startsWith('/api/')) {
+    const clean = req.path.slice(0, -5); // remove ".html"
+    const qs = req.originalUrl.includes('?') ? req.originalUrl.slice(req.originalUrl.indexOf('?')) : '';
+    return res.redirect(301, clean + qs);
+  }
+  next();
+});
+
+app.use(express.static(path.join(__dirname, '../public'), {
+  extensions: ['html']  // /articles → articles.html
+}));
+
 app.use('/api/auth', createRateLimiter({ keyPrefix: 'auth', max: 10, windowMs: 60_000 }), authRoutes);
 app.use('/api/spotify', createRateLimiter({ keyPrefix: 'spotify', max: 30, windowMs: 60_000 }), spotifyRoutes);
 app.use('/api/articles', createRateLimiter({ keyPrefix: 'articles', max: 120, windowMs: 60_000 }), articleRoutes);
 app.use('/api/red-letters', createRateLimiter({ keyPrefix: 'letters', max: 120, windowMs: 60_000 }), redLetterRoutes);
 app.use('/api/products', createRateLimiter({ keyPrefix: 'products', max: 120, windowMs: 60_000 }), productRoutes);
 app.use('/api/events', createRateLimiter({ keyPrefix: 'events', max: 120, windowMs: 60_000 }), eventRoutes);
+app.use('/api/ads', createRateLimiter({ keyPrefix: 'ads', max: 120, windowMs: 60_000 }), adRoutes);
 
 app.use((err, req, res, next) => {
   console.error(err.stack || err);

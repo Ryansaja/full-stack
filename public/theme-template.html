@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Share Your Thought | PAVED</title>
+    <link rel="icon" type="image/png" href="assets/Branch.png">
+    <link rel="stylesheet" href="assets/output.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    
+
+    <style>
+        /* CSS Tambahan & Transisi Tema */
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            transition: background-color 0.4s ease, color 0.4s ease; 
+        }
+        
+        /* Nav Link Animation */
+        .nav-link { position: relative; transition: color 0.3s ease; }
+        .nav-link::after { 
+            content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px; 
+            background: #18eb9a; transition: width 0.3s ease; 
+        }
+        .nav-link:hover::after { width: 100%; }
+        .nav-link:hover { color: #18eb9a; }
+
+        /* Utility */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        #sidebarPanel { transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        .menu-item { transition: all 0.3s ease; }
+        .menu-item:hover { padding-left: 10px; color: #18eb9a; }
+
+        /* Invert logo in Light Mode */
+        html.light .invert-img { filter: invert(1); }
+
+        /* Form Specific Styles */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 2.5rem;
+        }
+        html.light .glass-panel {
+            background: rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .custom-input {
+            background: rgba(125, 125, 125, 0.05);
+            border: 1px solid rgba(125, 125, 125, 0.1);
+            border-radius: 1.2rem;
+            padding: 1.1rem 1.4rem;
+            width: 100%;
+            outline: none;
+            transition: all 0.3s ease;
+            color: inherit;
+        }
+        .custom-input:focus {
+            border-color: #18eb9a;
+            background: rgba(125, 125, 125, 0.08);
+        }
+
+        /* Editor Placeholder */
+        .editor-area::placeholder {
+            color: rgba(125, 125, 125, 0.4);
+        }
+    </style>
+</head>
+<style>
+    .submenu {
+        height: 0;
+        opacity: 0;
+        pointer-events: none;
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .submenu.open {
+        opacity: 1;
+        pointer-events: auto;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .rotate-180 {
+        transform: rotate(180deg);
+    }
+</style>
+<style>
+    .submenu {
+        height: 0;
+        opacity: 0;
+        pointer-events: none;
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .submenu.open {
+        opacity: 1;
+        pointer-events: auto;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .rotate-180 {
+        transform: rotate(180deg);
+    }
+</style>
+
+<body class="bg-white text-black dark:bg-[#0a0a0a] dark:text-white antialiased">
+
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[200] opacity-0 pointer-events-none transition-opacity duration-500">
+    <div id="sidebarPanel" class="fixed top-0 left-0 w-full md:w-[450px] h-full bg-white dark:bg-[#0a0a0a] p-10 transform -translate-x-full z-[210] transition-all duration-500 border-r border-black/10 dark:border-white/5">
+        <div class="absolute top-8 left-0 w-full px-10 flex justify-between items-center">
+            <button id="themeToggleMobile" class="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-all duration-300 border border-black/10 dark:border-white/10">
+                <svg id="sunIconMobile" class="hidden w-5 h-5 text-orange-400" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"></path></svg>
+                <svg id="moonIconMobile" class="w-5 h-5 text-[#18eb9a]" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            </button>
+            <button id="closeSidebar" class="text-black/50 dark:text-white/50 hover:text-black dark:hover:text-white transition">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+
+        <div class="mt-16 space-y-6">
+            <div class="flex flex-col gap-4 text-3xl font-bold tracking-tighter">
+                <a href="/index" class="menu-item">Home Feed</a>
+
+                <div class="dropdown-group">
+                    <div onclick="toggleMenu(this)" class="menu-item flex justify-between items-center cursor-pointer">
+                        For You <svg class="w-6 h-6 transition-transform duration-300" fill="none" stroke="#18eb9a" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </div>
+                    <div class="submenu flex flex-col gap-4 pl-6 border-l border-slate-200 dark:border-white/10 ml-2">
+                        <a href="/articles" class="text-xl text-slate-500 hover:text-[#18eb9a] tracking-normal">Articles</a>
+                        <a href="/around-you" class="text-xl text-slate-500 hover:text-[#18eb9a] tracking-normal">What's Around You</a>
+                    </div>
+                </div>
+
+                <div class="dropdown-group">
+                    <div onclick="toggleMenu(this)" class="menu-item flex justify-between items-center cursor-pointer">
+                        From You <svg class="w-6 h-6 transition-transform duration-300" fill="none" stroke="#18eb9a" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </div>
+                    <div class="submenu flex flex-col gap-4 pl-6 border-l border-slate-200 dark:border-white/10 ml-2">
+                        <a href="/write-a-story" class="text-xl text-slate-500 hover:text-[#18eb9a] tracking-normal">Share Your Thought</a>
+                        <a href="/red-letter" class="text-xl text-slate-500 hover:text-[#FF0000] tracking-normal">Red Letter : The Unsent</a>
+                        <a href="/submit-event" class="text-xl text-slate-500 hover:text-[#18eb9a] tracking-normal">Submit An Event / Place</a>
+                    </div>
+                </div>
+
+                <div class="dropdown-group">
+                    <div onclick="toggleMenu(this)" class="menu-item flex justify-between items-center cursor-pointer">
+                        Product <svg class="w-6 h-6 transition-transform duration-300" fill="none" stroke="#18eb9a" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </div>
+                    <div class="submenu flex flex-col gap-4 pl-6 border-l border-slate-200 dark:border-white/10 ml-2">
+                        <a href="/product?filter=Digital Product" class="text-xl text-slate-500 hover:text-[#18eb9a] tracking-normal">Product Catalog</a>
+                        <a href="/product?filter=Journal %26 Kit" class="text-xl text-slate-500 hover:text-[#18eb9a] tracking-normal">Journal & Kit</a>
+                        <a href="/product?filter=Merchandise" class="text-xl text-slate-500 hover:text-[#18eb9a] tracking-normal">Merchandise</a>
+                        <a href="/product" class="text-xl text-slate-500 hover:text-[#18eb9a] tracking-normal">All Products</a>
+                    </div>
+                </div>
+
+                <a href="/write-a-story" class="menu-item">Write Now</a>
+                <a href="/about" class="menu-item">About</a>
+
+                <div class="flex gap-6 items-center pt-6 mt-4 border-t border-black/5 dark:border-white/5">
+                    <a href="https://www.instagram.com/gotitpaved/" target="_blank" rel="noopener noreferrer" class="text-black/50 dark:text-white/50 hover:text-[#18eb9a] transition">
+                        <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                    </a>
+                    <a href="https://www.tiktok.com/@gotitpaved?is_from_webapp=1&sender_device=pc" target="_blank" rel="noopener noreferrer" class="text-black/50 dark:text-white/50 hover:text-[#18eb9a] transition">
+                        <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.9-.32-1.98-.23-2.81.31-.75.42-1.24 1.25-1.31 2.1-.05.9.3 1.8 1.03 2.33.39.28.83.47 1.3.54 1.11.17 2.29-.19 3.11-.97.47-.48.74-1.14.76-1.8.01-2.98-.01-5.96 0-8.94.04-4.39-.01-8.79.02-13.18z"/>
+                        </svg>
+                    </a>
+                    <a href="mailto:pavedyourway@gmail.com" class="text-black/50 dark:text-white/50 hover:text-[#18eb9a] transition">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div id="searchOverlay" class="fixed inset-0 bg-black/95 z-[300] flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300">
+        <button id="closeSearch" class="absolute top-10 right-10 text-white/50 hover:text-white">
+            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+        <div class="w-full max-w-4xl px-10">
+            <input type="text" id="searchInput" placeholder="Type To Search..." class="w-full bg-transparent border-b-2 border-[#18eb9a] text-5xl md:text-7xl font-black tracking-tighter outline-none pb-4 text-white placeholder:text-white/5">
+        </div>
+    </div>
+
+    <header class="fixed top-0 w-full z-[100] bg-white/80 dark:bg-[#0a0a0a]/80 backdrop-blur-2xl border-b border-black/5 dark:border-white/5 transition-all">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex items-center justify-between h-20 border-b border-black/5 dark:border-white/5">
+                <div class="flex-1 flex items-center gap-3">
+                    <button id="openSidebar" class="p-2 hover:text-[#18eb9a] transition">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                    </button>
+                    <button id="themeToggle" class="hidden md:flex p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-all duration-300">
+                        <svg id="sunIcon" class="hidden w-5 h-5 text-orange-400" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"></path></svg>
+                        <svg id="moonIcon" class="w-5 h-5 text-[#18eb9a]" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                    </button>
+                </div>
+                 <a href="/index" class="inline-block transition-transform duration-300 hover:scale-105 active:scale-95">
+    <div class="flex flex-col items-center justify-center">
+                <img src="assets/pavedlogo.png" alt="PAVED" class="h-10 w-auto object-contain invert-img transition-all" loading="lazy" decoding="async">
+    </div>
+</a>
+
+                <div class="flex items-center justify-end gap-5 flex-1">
+                    <button id="openSearch" class="hover:text-[#18eb9a] transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                    </button>
+                    <a href="/write-a-story" class="hidden md:block bg-black text-white dark:bg-white dark:text-black px-5 py-2 rounded-sm text-[14px] font-black uppercase hover:bg-[#18eb9a] hover:text-white transition duration-300">Write Now</a>
+                </div>
+            </div>
+
+             <nav class="flex justify-center items-center h-16 border-b border-black/5 dark:border-white/10 relative overflow-x-auto no-scrollbar">
+    <div class="flex gap-6 md:gap-10 text-[10px] md:text-[11px] font-extrabold uppercase tracking-[0.1em] md:tracking-[0.15em] whitespace-nowrap">
+        
+       <div class="relative group">
+    <a href="#" class="nav-link hover:text-[#18eb9a] transition" style="text-transform: none !important;">For You</a>
+    <div class="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-48 bg-white/70 dark:bg-black/70 backdrop-blur-xl border border-white/20 rounded-2xl p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 shadow-2xl z-50">
+        <a href="/articles" class="block px-4 py-3 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition text-center" style="text-transform: none !important;">Articles</a>
+        <a href="/around-you" class="block px-4 py-3 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition text-center" style="text-transform: none !important;">What’s Around You</a>
+    </div>
+</div>
+
+<div class="relative group">
+    <a href="#" class="nav-link hover:text-[#18eb9a] transition" style="text-transform: none !important;">From You</a>
+    <div class="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-48 bg-white/70 dark:bg-black/70 backdrop-blur-xl border border-white/20 rounded-2xl p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 shadow-2xl z-50">
+        <a href="/write-a-story" class="block px-4 py-3 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition text-center" style="text-transform: none !important;">Share Your Thought</a>
+        <a href="/red-letter" class="block px-4 py-3 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition text-center" style="text-transform: none !important;">Red Letter : The Unsent</a>
+        <a href="/submit-event" class="block px-4 py-3 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition text-center" style="text-transform: none !important;">Submit An Event/Place</a>
+    </div>
+</div>
+
+<div class="relative group">
+    <a href="#" class="nav-link hover:text-[#18eb9a] transition" style="text-transform: none !important;">Product</a>
+    <div class="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-48 bg-white/70 dark:bg-black/70 backdrop-blur-xl border border-white/20 rounded-2xl p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 shadow-2xl z-50">
+        
+        <a href="/product?filter=Digital Product" class="block px-4 py-3 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition text-center" style="text-transform: none !important;">Product Catalog</a>
+        
+        <a href="/product?filter=Journal %26 Kit" class="block px-4 py-3 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition text-center" style="text-transform: none !important;">Journal & Kit</a>
+        
+        <a href="/product?filter=Merchandise" class="block px-4 py-3 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition text-center" style="text-transform: none !important;">Merchandise</a>
+        
+        <a href="/product" class="block px-4 py-3 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl transition text-center" style="text-transform: none !important;">All Products</a>
+    </div>
+</div>
+
+
+<div class="relative group">
+    <a href="/write-a-story" class="nav-link hover:text-[#18eb9a] transition" style="text-transform: none !important;">Write Now</a>
+</div>
+        </div>
+    </header>
+
+   
+
+    <script>
+        // SIDEBAR LOGIC
+        const openSidebar = document.getElementById('openSidebar');
+        const closeSidebar = document.getElementById('closeSidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const sidebarPanel = document.getElementById('sidebarPanel');
+
+        openSidebar.onclick = () => {
+            sidebarOverlay.classList.remove('pointer-events-none');
+            sidebarOverlay.classList.add('opacity-100');
+            sidebarPanel.classList.remove('-translate-x-full');
+        };
+
+        const closeFunc = () => {
+            sidebarOverlay.classList.add('pointer-events-none');
+            sidebarOverlay.classList.remove('opacity-100');
+            sidebarPanel.classList.add('-translate-x-full');
+        };
+        closeSidebar.onclick = closeFunc;
+        sidebarOverlay.onclick = (e) => { if(e.target === sidebarOverlay) closeFunc(); };
+
+        // THEME LOGIC
+        const html = document.documentElement;
+        const themeToggle = document.getElementById('themeToggle');
+        const themeToggleMobile = document.getElementById('themeToggleMobile');
+
+        function updateIcons(isDark) {
+            document.getElementById('sunIcon').classList.toggle('hidden', !isDark);
+            document.getElementById('moonIcon').classList.toggle('hidden', isDark);
+            document.getElementById('sunIconMobile').classList.toggle('hidden', !isDark);
+            document.getElementById('moonIconMobile').classList.toggle('hidden', isDark);
+        }
+
+        function toggleTheme() {
+            const isDark = html.classList.toggle('dark');
+            html.classList.toggle('light', !isDark);
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            updateIcons(isDark);
+        }
+
+        themeToggle.onclick = toggleTheme;
+        themeToggleMobile.onclick = toggleTheme;
+
+        
+
+        // SEARCH LOGIC
+        const openSearch = document.getElementById('openSearch');
+        const closeSearch = document.getElementById('closeSearch');
+        const searchOverlay = document.getElementById('searchOverlay');
+
+        openSearch.onclick = () => {
+            searchOverlay.classList.remove('pointer-events-none', 'opacity-0');
+            document.getElementById('searchInput').focus();
+        };
+        closeSearch.onclick = () => searchOverlay.classList.add('pointer-events-none', 'opacity-0');
+
+        // FORM SUBMISSION
+        function submitDraft() { 
+            alert("Duly Noted.\n\nYour article has found its place in the archive. A navigator from Paved will review your entry shortly."); 
+        }
+    </script>
+    <script>
+    // Fungsi filter yang sudah kita buat sebelumnya
+    function filterCategory(category, element) {
+        const items = document.querySelectorAll('.product-item');
+        const links = document.querySelectorAll('.category-link');
+        const indicators = document.querySelectorAll('.nav-indicator');
+        const titleText = document.getElementById('current-category-title');
+        let count = 0;
+
+        links.forEach((link, i) => {
+            link.classList.remove('text-slate-900', 'dark:text-white', 'font-bold');
+            link.classList.add('text-slate-400');
+            indicators[i].style.width = "0";
+        });
+
+        if(element) {
+            element.classList.replace('text-slate-400', 'text-slate-900');
+            element.classList.add('dark:text-white', 'font-bold');
+            element.nextElementSibling.style.width = "100%";
+        }
+
+        titleText.innerText = category === 'all' ? 'Semua Produk' : category;
+
+        items.forEach(item => {
+            if (category === 'all' || item.getAttribute('data-category') === category) {
+                item.style.display = "block";
+                count++;
+            } else {
+                item.style.display = "none";
+            }
+        });
+        document.getElementById('result-count').innerText = count;
+    }
+
+    // LOGIKA AUTO-FILTER SAAT HALAMAN DIBUKA
+    window.addEventListener('DOMContentLoaded', () => {
+        const params = new URLSearchParams(window.location.search);
+        const filterValue = params.get('filter');
+
+        if (filterValue) {
+            const categoryLinks = document.querySelectorAll('.category-link');
+            let targetElement = null;
+
+            categoryLinks.forEach(link => {
+                // Mencocokkan teks di link sidebar dengan parameter URL
+                if (link.innerText.trim() === filterValue) {
+                    targetElement = link;
+                }
+            });
+
+            if (targetElement) {
+                filterCategory(filterValue, targetElement);
+            }
+        } else {
+            // Jika tidak ada filter, tampilkan semua secara default
+            document.getElementById('result-count').innerText = document.querySelectorAll('.product-item').length;
+        }
+    });
+</script>
+<script>
+function toggleMenu(element) {
+    const group = element.parentElement;
+    const submenu = group.querySelector('.submenu');
+    const icon = element.querySelector('svg');
+
+    // Cek apakah menu yang diklik sudah terbuka
+    const isOpen = submenu.classList.contains('open');
+
+    // Tutup SEMUA menu lain dulu (Efek Accordion)
+    document.querySelectorAll('.submenu').forEach(nav => {
+        nav.classList.remove('open');
+        nav.style.height = '0px';
+        // Reset icon panah menu lain
+        const otherIcon = nav.previousElementSibling.querySelector('svg');
+        if(otherIcon) otherIcon.classList.remove('rotate-180');
+    });
+
+    // Jika tadinya tertutup, sekarang buka
+    if (!isOpen) {
+        submenu.classList.add('open');
+        submenu.style.height = submenu.scrollHeight + "px";
+        icon.classList.add('rotate-180');
+    }
+}
+</script>
+<script>
+function toggleMenu(element) {
+    const group = element.parentElement;
+    const submenu = group.querySelector('.submenu');
+    const icon = element.querySelector('svg');
+
+    // Cek apakah menu yang diklik sudah terbuka
+    const isOpen = submenu.classList.contains('open');
+
+    // Tutup SEMUA menu lain dulu (Efek Accordion)
+    document.querySelectorAll('.submenu').forEach(nav => {
+        nav.classList.remove('open');
+        nav.style.height = '0px';
+        // Reset icon panah menu lain
+        const otherIcon = nav.previousElementSibling.querySelector('svg');
+        if(otherIcon) otherIcon.classList.remove('rotate-180');
+    });
+
+    // Jika tadinya tertutup, sekarang buka
+    if (!isOpen) {
+        submenu.classList.add('open');
+        submenu.style.height = submenu.scrollHeight + "px";
+        icon.classList.add('rotate-180');
+    }
+}
+</script>
+<script>
+    // Filter Search
+    document.getElementById('searchInput').addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') {
+        const query = this.value.trim().toLowerCase();
+        if (query) {
+            // Mengarahkan ke articles.html dengan parameter pencarian
+            window.location.href = `/articles?q=${encodeURIComponent(query)}`;
+        }
+    }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PAVED | Elite Retro Arcade v4</title>
+    <link rel="stylesheet" href="assets/output.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #10b981; --bg: #020617; }
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background: var(--bg);
+            background-image: radial-gradient(circle at 50% -20%, #1e293b, #020617);
+            color: white; overflow-x: hidden; min-height: 100vh;
+            touch-action: manipulation; /* Prevent mobile double-tap zoom */
+        }
+        .glass { 
+            background: rgba(255, 255, 255, 0.02); 
+            backdrop-filter: blur(25px); 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+        }
+        .btn-premium {
+            background: white; color: black;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-weight: 800;
+        }
+        .btn-premium:hover { transform: scale(1.05); box-shadow: 0 0 40px rgba(16, 185, 129, 0.5); }
+        canvas { 
+            background: #000; border-radius: 2.5rem; 
+            border: 1px solid rgba(255,255,255,0.05); 
+            box-shadow: 0 0 80px rgba(0,0,0,0.5);
+            touch-action: none; /* Mobile Friendly */
+        }
+        .level-badge { 
+            background: rgba(16, 185, 129, 0.1); color: #10b981; 
+            padding: 4px 16px; border-radius: 99px; 
+            font-weight: 800; font-size: 10px; border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center p-6 pb-20">
+
+    <nav class="w-full max-w-6xl flex justify-between items-center mb-12 mt-4">
+        <div class="flex flex-col">
+            <span class="text-3xl font-black tracking-tighter italic">PAVED<span class="text-emerald-500">.</span></span>
+            <span class="text-[8px] tracking-[0.6em] opacity-40 uppercase font-bold">Arcade Division</span>
+        </div>
+        <a href="/" class="text-[10px] font-extrabold opacity-40 uppercase tracking-[0.2em] hover:opacity-100 transition-all">← Back to Portal</a>
+    </nav>
+
+    <div id="menu" class="w-full max-w-5xl text-center">
+        <h1 class="text-7xl font-black tracking-tighter mb-4 italic uppercase">Elite <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-blue-500">Missions</span></h1>
+        <p class="opacity-30 text-[10px] tracking-[0.5em] mb-16 uppercase font-bold">Select an operation • mobile supported</p>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <button onclick="showInstructions('dino')" class="game-card glass p-8 rounded-[3rem] group transition-all hover:border-emerald-500/50">
+                <div class="text-5xl mb-4 group-hover:scale-110 transition-transform duration-500">🦖</div>
+                <h3 class="font-bold text-[10px] tracking-[0.2em] uppercase">V-Dino Run</h3>
+            </button>
+            <button onclick="showInstructions('brick')" class="game-card glass p-8 rounded-[3rem] group transition-all hover:border-emerald-500/50">
+                <div class="text-5xl mb-4 group-hover:scale-110 transition-transform duration-500">🧱</div>
+                <h3 class="font-bold text-[10px] tracking-[0.2em] uppercase">Core Break</h3>
+            </button>
+            <button onclick="showInstructions('snake')" class="game-card glass p-8 rounded-[3rem] group transition-all hover:border-emerald-500/50">
+                <div class="text-5xl mb-4 group-hover:scale-110 transition-transform duration-500">🐍</div>
+                <h3 class="font-bold text-[10px] tracking-[0.2em] uppercase">Bio-Snake</h3>
+            </button>
+            <button onclick="showInstructions('flap')" class="game-card glass p-8 rounded-[3rem] group transition-all hover:border-emerald-500/50">
+                <div class="text-5xl mb-4 group-hover:scale-110 transition-transform duration-500">🐦</div>
+                <h3 class="font-bold text-[10px] tracking-[0.2em] uppercase">Cyber Flap</h3>
+            </button>
+            <button onclick="showInstructions('pong')" class="game-card glass p-8 rounded-[3rem] group transition-all hover:border-emerald-500/50">
+                <div class="text-5xl mb-4 group-hover:scale-110 transition-transform duration-500">🏓</div>
+                <h3 class="font-bold text-[10px] tracking-[0.2em] uppercase">Neural Pong</h3>
+            </button>
+            <button onclick="showInstructions('catch')" class="game-card glass p-8 rounded-[3rem] group transition-all hover:border-emerald-500/50">
+                <div class="text-5xl mb-4 group-hover:scale-110 transition-transform duration-500">🍎</div>
+                <h3 class="font-bold text-[10px] tracking-[0.2em] uppercase">Data Catch</h3>
+            </button>
+            <button onclick="showInstructions('dodge')" class="game-card glass p-8 rounded-[3rem] group transition-all hover:border-emerald-500/50">
+                <div class="text-5xl mb-4 group-hover:scale-110 transition-transform duration-500">☄️</div>
+                <h3 class="font-bold text-[10px] tracking-[0.2em] uppercase">Orbital Dodge</h3>
+            </button>
+            <button onclick="showInstructions('tap')" class="game-card glass p-8 rounded-[3rem] group transition-all hover:border-emerald-500/50">
+                <div class="text-5xl mb-4 group-hover:scale-110 transition-transform duration-500">⚡</div>
+                <h3 class="font-bold text-[10px] tracking-[0.2em] uppercase">Flash Scan</h3>
+            </button>
+        </div>
+    </div>
+
+    <div id="game-screen" class="hidden fixed inset-0 flex flex-col items-center justify-center bg-[#020617]/99 backdrop-blur-3xl p-4">
+        <div class="flex justify-between w-full max-w-[650px] mb-8 px-6 md:px-8 items-center">
+            <button onclick="backToMenu()" class="text-[9px] tracking-[0.3em] opacity-40 hover:opacity-100 uppercase font-black transition-all">← Abort</button>
+            <div class="flex gap-4 items-center">
+                <div id="level-badge" class="level-badge">LEVEL 1</div>
+                <div id="score-text" class="font-black text-4xl italic text-emerald-400 tabular-nums">0</div>
+            </div>
+        </div>
+        
+        <div class="relative w-full max-w-[600px] aspect-[3/2]">
+            <canvas id="gameCanvas" class="w-full h-full"></canvas>
+            
+            <div id="instruction-overlay" class="absolute inset-0 flex flex-col items-center justify-center bg-black/90 rounded-[2.5rem] p-10 text-center backdrop-blur-xl border border-white/5">
+                <h2 id="ins-title" class="text-4xl md:text-5xl font-black mb-4 uppercase italic tracking-tighter">TITLE</h2>
+                <p id="ins-text" class="text-white/40 mb-10 text-[11px] font-bold tracking-widest max-w-xs md:max-w-sm leading-loose uppercase"></p>
+                <button onclick="startCountdown()" class="btn-premium px-16 py-5 rounded-full text-[10px] tracking-[0.4em] uppercase">SAYA SIAP</button>
+            </div>
+
+            <div id="countdown-overlay" class="hidden absolute inset-0 flex items-center justify-center bg-black/40 rounded-[2.5rem]">
+                <h2 id="countdown-text" class="text-[10rem] md:text-[12rem] font-black italic text-emerald-500">3</h2>
+            </div>
+
+            <div id="retry-overlay" class="hidden absolute inset-0 flex flex-col items-center justify-center bg-black/95 rounded-[2.5rem] backdrop-blur-2xl border border-emerald-500/20 text-center p-8">
+                <h2 class="text-5xl md:text-6xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-blue-500 italic tracking-tighter uppercase">Mission Complete</h2>
+                <p id="final-score-msg" class="text-white opacity-90 mb-12 font-bold text-xs tracking-[0.3em] uppercase leading-relaxed"></p>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <button onclick="startCountdown()" class="btn-premium px-12 py-5 rounded-full text-[10px] tracking-[0.3em] uppercase">RETRY MISSION</button>
+                    <button onclick="backToMenu()" class="glass px-12 py-5 rounded-full text-[10px] font-black tracking-[0.3em] uppercase hover:bg-white/10">BACK TO MENU</button>
+                </div>
+            </div>
+        </div>
+        <p class="mt-8 text-[9px] opacity-20 tracking-[0.5em] uppercase font-bold text-white/50">Gunakan Mouse / Tombol Panah / Tap Layar Untuk Bermain</p>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const menu = document.getElementById('menu');
+        const gameScreen = document.getElementById('game-screen');
+        const scoreEl = document.getElementById('score-text');
+        const levelEl = document.getElementById('level-badge');
+        const retryOverlay = document.getElementById('retry-overlay');
+        const insOverlay = document.getElementById('instruction-overlay');
+        const countdownOverlay = document.getElementById('countdown-overlay');
+        const countdownText = document.getElementById('countdown-text');
+        const finalScoreMsgEl = document.getElementById('final-score-msg');
+
+        let currentGame = null, score = 0, level = 1, gameActive = false, animationId;
+
+        // HIGH QUALITY ASSETS (MOBILE OPTIMIZED)
+        const img = {
+            dino: new Image(), cactus: new Image(), 
+            bird: new Image(), apple: new Image()
+        };
+        // Dino Sempurna Menghadap Kanan (Real T-Rex Pixel)
+        img.dino.src = 'https://cdn-icons-png.flaticon.com/512/2972/2972185.png'; 
+        img.cactus.src = 'https://cdn-icons-png.flaticon.com/512/3032/3032306.png'; 
+        img.bird.src = 'https://cdn-icons-png.flaticon.com/512/739/739249.png'; 
+        img.apple.src = 'https://cdn-icons-png.flaticon.com/512/415/415682.png'; 
+
+        const gameData = {
+            dino: { title: "V-Dino Run", text: "Tekan SPASI atau TAP LAYAR untuk melompat melewati kaktus digital." },
+            brick: { title: "Core Break", text: "Pantulkan bola inti menggunakan papan sensor. Hancurkan semua modul data." },
+            snake: { title: "Bio-Snake", text: "Konsumsi node energi tanpa menabrak batas sistem atau tubuh sendiri." },
+            flap: { title: "Cyber Flap", text: "Ketuk MOUSE atau TAP LAYAR untuk melewati celah keamanan sistem." },
+            pong: { title: "Neural Pong", text: "Duel tenis klasik 2026. Jangan biarkan bola AI melewati pertahananmu." },
+            catch: { title: "Data Catch", text: "Tangkap paket data jatuh sebelum terhapus permanen dari memori sistem." },
+            dodge: { title: "Orbital Dodge", text: "Gunakan MOUSE atau TAP untuk menghindari fragmen asteroid di orbit pertahanan." },
+            tap: { title: "Flash Scan", text: "Klik atau TAP bola anomali merah secepat mungkin sebelum waktu habis." }
+        };
+
+        function showInstructions(type) {
+            currentGame = type; menu.classList.add('hidden'); gameScreen.classList.remove('hidden');
+            insOverlay.classList.remove('hidden'); retryOverlay.classList.add('hidden');
+            document.getElementById('ins-title').innerText = gameData[type].title;
+            document.getElementById('ins-text').innerText = gameData[type].text;
+            // Mobile Optimization: Resize canvas logic
+            canvas.width = 600; canvas.height = 400;
+        }
+
+        function startCountdown() {
+            insOverlay.classList.add('hidden'); retryOverlay.classList.add('hidden');
+            countdownOverlay.classList.remove('hidden');
+            let count = 3; countdownText.innerText = count;
+            const timer = setInterval(() => {
+                count--;
+                if(count > 0) countdownText.innerText = count;
+                else { clearInterval(timer); countdownOverlay.classList.add('hidden'); initGame(); }
+            }, 800);
+        }
+
+        function initGame() {
+            score = 0; level = 1; gameActive = true; updateUI();
+            if (currentGame === 'dino') loopDino();
+            if (currentGame === 'brick') loopBrick();
+            if (currentGame === 'snake') loopSnake();
+            if (currentGame === 'flap') loopFlap();
+            if (currentGame === 'pong') loopPong();
+            if (currentGame === 'catch') loopCatch();
+            if (currentGame === 'dodge') loopDodge();
+            if (currentGame === 'tap') loopTap();
+        }
+
+        function updateUI() {
+            scoreEl.innerText = Math.floor(score);
+            levelEl.innerText = `LEVEL ${level}`;
+            if (score >= 20) level = 2;
+            if (score >= 50) level = 3;
+            if (score >= 90) level = 4;
+            if (score >= 150) level = 5;
+        }
+
+        function missionComplete() {
+            gameActive = false; cancelAnimationFrame(animationId);
+            finalScoreMsgEl.innerText = `CONGRATS! You have score ${Math.floor(score)} on ${gameData[currentGame].title}`;
+            retryOverlay.classList.remove('hidden');
+        }
+
+        function backToMenu() {
+            gameActive = false; cancelAnimationFrame(animationId);
+            gameScreen.classList.add('hidden'); menu.classList.remove('hidden');
+        }
+
+        // MOBILE CONTROL SETUP (TAP to ACT)
+        window.addEventListener('touchstart', mobileAction);
+        function mobileAction(e) {
+            if(!gameActive) return;
+            // Prevent action if retry menu is up
+            if(!retryOverlay.classList.contains('hidden')) return;
+
+            if (currentGame === 'dino' || currentGame === 'flap') {
+                e.preventDefault();
+                dinoJump(); // Share flap bird jump logic
+            }
+        }
+
+        // --- CALIBRATED GAME LOGIC (PERFECTED & MOBILE READY) ---
+
+        function dinoJump() { if(gameActive && currentGame === 'dino' && window.dy === 330) window.jump = -12.5; else if(currentGame === 'flap') window.flapBV = -6.5;}
+
+        function loopDino() {
+            window.dy = 330; window.jump = 0; let obs = [];
+            function frame() {
+                if(!gameActive) return; ctx.clearRect(0,0,600,400);
+                // Mesh Gradient Background (Clean Retro-Futuristic)
+                let grad = ctx.createRadialGradient(300, -50, 0, 300, -50, 450); grad.addColorStop(0, "#1f2937"); grad.addColorStop(1, "#0a0f1e");
+                ctx.fillStyle = grad; ctx.fillRect(0,0,600,400);
+
+                let speed = 2.2 + (level * 0.8); // Smooth Slow-to-Fast
+                window.jump += 0.65; window.dy += window.jump; if(window.dy > 330) { window.dy = 330; window.jump = 0; }
+                
+                // Draw Perfect Dino (Facing Right)
+                ctx.drawImage(img.dino, 50, window.dy, 45, 45); 
+
+                if(Math.random() < 0.006 + (level*0.003)) obs.push({x: 600});
+                obs.forEach((o, i) => {
+                    o.x -= speed; ctx.drawImage(img.cactus, o.x, 335, 35, 45);
+                    if(o.x < 85 && o.x > 50 && window.dy > 300) missionComplete(); // Positive Message
+                    if(o.x < -40) { obs.splice(i,1); score++; updateUI(); }
+                });
+                animationId = requestAnimationFrame(frame);
+            }
+            window.onkeydown = (e) => { if(e.code === 'Space' || e.code === 'ArrowUp') dinoJump(); };
+            frame();
+        }
+
+        // (Other games follow the same visual cleanup, leveling, and missionComplete logic)
+        function loopBrick() {
+            let px = 225, bx = 300, by = 250, bdx = 1.6, bdy = -1.6, bricks = [];
+            for(let r=0; r<4; r++) for(let c=0; c<8; c++) bricks.push({x: c*75, y: r*25+50, v: true});
+            function frame() {
+                if(!gameActive) return; ctx.clearRect(0,0,600,400);
+                let grad = ctx.createRadialGradient(300, -50, 0, 300, -50, 450); grad.addColorStop(0, "#111"); grad.addColorStop(1, "#000"); ctx.fillStyle = grad; ctx.fillRect(0,0,600,400);
+                let padW = 150 - (level*15); let s = 0.8 + (level * 0.25); bx += bdx*s; by += bdy*s; if(bx<0 || bx>600) bdx *= -1.02; if(by<0) bdy *= -1.02;
+                if(by>370 && bx>px && bx<px+padW) bdy *= -1; if(by>400) missionComplete();
+                ctx.fillStyle = '#10b981'; ctx.shadowBlur=15; ctx.shadowColor='#10b981'; ctx.beginPath(); ctx.roundRect(px, 380, padW, 10, 5); ctx.fill(); ctx.shadowBlur=0;
+                ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(bx, by, 8, 0, Math.PI*2); ctx.fill();
+                bricks.forEach(b => { if(b.v) {
+                    ctx.fillStyle = `rgba(59, 130, 246, ${0.4 + (level * 0.1)})`; ctx.beginPath(); ctx.roundRect(b.x+5, b.y, 65, 15, 4); ctx.fill();
+                    if(bx > b.x && bx < b.x+70 && by > b.y && by < b.y+20) { b.v = false; bdy *= -1; score += 2; updateUI(); }
+                }});
+                animationId = requestAnimationFrame(frame);
+            }
+            window.onmousemove = (e) => { px = e.clientX - canvas.getBoundingClientRect().left - 75; };
+            // Mobile Support for Brick: Touch drag
+            canvas.addEventListener('touchmove', (e) => { px = e.touches[0].clientX - canvas.getBoundingClientRect().left - 75; e.preventDefault(); }, { passive: false });
+            frame();
+        }
+
+        function loopSnake() {
+            let snake = [{x:10, y:10}], food = {x:15, y:15}, dx=1, dy=0, count=0;
+            function frame() {
+                if(!gameActive) return; animationId = requestAnimationFrame(frame);
+                let grad = ctx.createRadialGradient(300, 200, 0, 300, 200, 400); grad.addColorStop(0, "#0a0a0a"); grad.addColorStop(1, "#000"); ctx.fillStyle = grad; ctx.fillRect(0,0,600,400);
+                if(++count < Math.max(3, 14-level)) return; count = 0;
+                let head = {x: snake[0].x+dx, y: snake[0].y+dy};
+                if(head.x<0 || head.x>29 || head.y<0 || head.y>19) return missionComplete();
+                if(snake.some(s => s.x === head.x && s.y === head.y)) return missionComplete();
+                snake.unshift(head);
+                if(head.x===food.x && head.y===food.y) { score+=10; updateUI(); food={x:Math.floor(Math.random()*30), y:Math.floor(Math.random()*20)}; }
+                else snake.pop();
+                ctx.drawImage(img.apple, food.x*20, food.y*20, 20, 20);
+                snake.forEach((s, i) => { ctx.fillStyle = i === 0 ? '#10b981' : `rgba(16, 185, 129, ${1 - (i/snake.length)})`; ctx.beginPath(); ctx.roundRect(s.x*20, s.y*20, 18, 18, 4); ctx.fill(); });
+            }
+            window.onkeydown = (e) => { 
+                if(e.key==='ArrowUp'&&dy===0){dx=0;dy=-1;} if(e.key==='ArrowDown'&&dy===0){dx=0;dy=1;}
+                if(e.key==='ArrowLeft'&&dx===0){dx=-1;dy=0;} if(e.key==='ArrowRight'&&dx===0){dx=1;dy=0;}
+            };
+            // Mobile Support: Snake Swipe (simplified as on tap action for space in mobileAction function)
+            frame();
+        }
+
+        function loopFlap() {
+            window.flapBY = 200; window.flapBV = 0; let pipes = [];
+            function frame() {
+                if(!gameActive) return; ctx.clearRect(0,0,600,400);
+                let grad = ctx.createRadialGradient(300, -50, 0, 300, -50, 450); grad.addColorStop(0, "#1f2937"); grad.addColorStop(1, "#0a0f1e"); ctx.fillStyle = grad; ctx.fillRect(0,0,600,400);
+                window.flapBV += 0.38; window.flapBY += window.flapBV;
+                ctx.drawImage(img.bird, 100, window.flapBY, 40, 35);
+                if(window.flapBY > 400 || window.flapBY < 0) missionComplete();
+                if(Math.random() < 0.008) pipes.push({x: 600, h: Math.random()*200+50});
+                pipes.forEach((p, i) => {
+                    p.x -= (2.2 + level);
+                    ctx.fillStyle = 'rgba(16, 185, 129, 0.2)'; ctx.beginPath(); ctx.roundRect(p.x, 0, 50, p.h, [0,0,8,8]); ctx.fill(); ctx.beginPath(); ctx.roundRect(p.x, p.h + 145 - (level*10), 50, 400, [8,8,0,0]); ctx.fill();
+                    if(p.x < 140 && p.x > 60 && (window.flapBY < p.h || window.flapBY > p.h + 145 - (level*10))) missionComplete();
+                    if(p.x < -50) { pipes.splice(i, 1); score+=5; updateUI(); }
+                });
+                animationId = requestAnimationFrame(frame);
+            }
+            window.onkeydown = dinoJump;
+            frame();
+        }
+
+        function loopPong() {
+            let py = 150, ey = 150, bx = 300, by = 200, bdx = 2.8, bdy = 2.8;
+            function frame() {
+                if(!gameActive) return; ctx.clearRect(0,0,600,400);
+                let grad = ctx.createRadialGradient(300, -50, 0, 300, -50, 450); grad.addColorStop(0, "#111"); grad.addColorStop(1, "#000"); ctx.fillStyle = grad; ctx.fillRect(0,0,600,400);
+                let s = 0.8 + (level * 0.2); bx += bdx*s; by += bdy*s; if(by<0 || by>400) bdy *= -1;
+                ey += (by - (ey + 40)) * (0.02 + level*0.015);
+                if(bx > 580 && by > ey && by < ey + 80) bdx *= -1.02; if(bx < 20 && by > py && by < py + 80) bdx *= -1.02;
+                if(bx < 0) missionComplete(); if(bx > 600) { bdx *= -1; score+=10; updateUI(); }
+                ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.roundRect(10, py, 10, 80, 5); ctx.fill(); ctx.fillStyle = 'rgba(255,255,255,0.2)'; ctx.beginPath(); ctx.roundRect(580, ey, 10, 80, 5); ctx.fill(); ctx.beginPath(); ctx.arc(bx, by, 7, 0, Math.PI*2); ctx.fill();
+                animationId = requestAnimationFrame(frame);
+            }
+            window.onmousemove = (e) => { py = e.clientY - canvas.getBoundingClientRect().top - 40; };
+            // Mobile: touch drag
+            canvas.addEventListener('touchmove', (e) => { py = e.touches[0].clientY - canvas.getBoundingClientRect().top - 40; e.preventDefault(); }, { passive: false });
+            frame();
+        }
+
+        function loopCatch() {
+            let px = 250, fruits = [];
+            function frame() {
+                if(!gameActive) return; ctx.clearRect(0,0,600,400);
+                let grad = ctx.createRadialGradient(300, -50, 0, 300, -50, 450); grad.addColorStop(0, "#0a0a0a"); grad.addColorStop(1, "#000"); ctx.fillStyle = grad; ctx.fillRect(0,0,600,400);
+                ctx.font = '45px serif'; ctx.fillText('🧺', px, 385);
+                if(Math.random() < 0.02 + level*0.01) fruits.push({x: Math.random()*570, y: 0});
+                fruits.forEach((f, i) => {
+                    f.y += (1.4 + level*0.6); ctx.drawImage(img.apple, f.x, f.y, 30, 30);
+                    if(f.y > 350 && f.x > px - 15 && f.x < px + 55) { fruits.splice(i, 1); score+=2; updateUI(); }
+                    else if(f.y > 400) missionComplete();
+                });
+                animationId = requestAnimationFrame(frame);
+            }
+            window.onmousemove = (e) => { px = e.clientX - canvas.getBoundingClientRect().left - 25; };
+            // Mobile: touch drag
+            canvas.addEventListener('touchmove', (e) => { px = e.touches[0].clientX - canvas.getBoundingClientRect().left - 25; e.preventDefault(); }, { passive: false });
+            frame();
+        }
+
+        function loopDodge() {
+            let px = 300, py = 200, balls = [];
+            function frame() {
+                if(!gameActive) return; ctx.clearRect(0,0,600,400);
+                let grad = ctx.createRadialGradient(300, 200, 0, 300, 200, 400); grad.addColorStop(0, "#0a0f1e"); grad.addColorStop(1, "#000"); ctx.fillStyle = grad; ctx.fillRect(0,0,600,400);
+                ctx.font = '30px serif'; ctx.fillText('🛡️', px - 15, py + 10);
+                if(Math.random() < 0.03 + level*0.03) balls.push({x: 600, y: Math.random()*400, s: Math.random()*2+2});
+                balls.forEach((b, i) => {
+                    b.x -= b.s * (1 + level*0.25); ctx.font = '25px serif'; ctx.fillText('☄️', b.x, b.y);
+                    if(Math.hypot(px-b.x, py-b.y) < 22) missionComplete();
+                    if(b.x < -25) { balls.splice(i, 1); score++; updateUI(); }
+                });
+                animationId = requestAnimationFrame(frame);
+            }
+            window.onmousemove = (e) => { let r = canvas.getBoundingClientRect(); px = e.clientX - r.left; py = e.clientY - r.top; };
+            // Mobile: touch drag
+            canvas.addEventListener('touchmove', (e) => { let r = canvas.getBoundingClientRect(); px = e.touches[0].clientX - r.left; py = e.touches[0].clientY - r.top; e.preventDefault(); }, { passive: false });
+            frame();
+        }
+
+        function loopTap() {
+            let target = {x: 300, y: 200, r: 45}, timer = 100;
+            function frame() {
+                if(!gameActive) return; ctx.clearRect(0,0,600,400);
+                let grad = ctx.createRadialGradient(300, 200, 0, 300, 200, 400); grad.addColorStop(0, "#1a1a1a"); grad.addColorStop(1, "#000"); ctx.fillStyle = grad; ctx.fillRect(0,0,600,400);
+                timer -= (0.3 + level*0.15); if(timer <= 0) missionComplete();
+                ctx.fillStyle = '#ef4444'; ctx.shadowBlur = 20; ctx.shadowColor = '#ef4444'; ctx.beginPath(); ctx.arc(target.x, target.y, target.r, 0, Math.PI*2); ctx.fill(); ctx.shadowBlur = 0;
+                ctx.fillStyle = 'rgba(255,255,255,0.1)'; ctx.roundRect(150, 20, 300, 10, 5); ctx.fill(); ctx.fillStyle = '#fff'; ctx.roundRect(150, 20, timer*3, 10, 5); ctx.fill();
+                animationId = requestAnimationFrame(frame);
+            }
+            // Consolidate mobile tap with mouse down
+            const tapAction = (mx, my) => {
+                if(Math.hypot(mx - target.x, my - target.y) < target.r) {
+                    score+=5; updateUI(); timer = 100; target = {x: Math.random()*500+50, y: Math.random()*300+50, r: Math.max(20, 45-level*5)};
+                }
+            };
+            canvas.onmousedown = (e) => { let r = canvas.getBoundingClientRect(); tapAction(e.clientX - r.left, e.clientY - r.top); };
+            canvas.addEventListener('touchstart', (e) => { if(gameActive && currentGame === 'tap') { let r = canvas.getBoundingClientRect(); tapAction(e.touches[0].clientX - r.left, e.touches[0].clientY - r.top); e.preventDefault(); } }, { passive: false });
+            frame();
+        }
+    </script>
+</body>
+</html>

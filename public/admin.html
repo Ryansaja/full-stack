@@ -1,0 +1,1717 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PAVED Admin | Content Manager</title>
+    <link rel="icon" type="image/png" href="assets/Branch.png">
+    <link rel="stylesheet" href="assets/output.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800;900&display=swap');
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #08090a;
+            color: white;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(24, 235, 154, 0.2);
+        }
+
+        /* Alias used for form & submission panels */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(24, 235, 154, 0.15);
+            border-radius: 1.5rem;
+        }
+
+
+        .active-tab {
+            background: rgba(24, 235, 154, 0.2);
+            color: #18eb9a;
+            border-color: rgba(24, 235, 154, 0.4);
+        }
+
+        .article-mode #title {
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            background: transparent;
+            border: 0;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.12);
+            border-radius: 0;
+            padding-left: 0;
+            padding-right: 0;
+            padding-top: 1rem;
+            padding-bottom: 1.25rem;
+        }
+
+        .article-mode #title:focus {
+            border-bottom-color: #18eb9a;
+        }
+
+        .audience-like-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: rgba(255, 255, 255, 0.45);
+            font-weight: 800;
+            margin-left: 0.25rem;
+        }
+
+        .dashed-box {
+            border: 2px dashed rgba(255, 255, 255, 0.15);
+            border-radius: 1rem;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .custom-input {
+            background: rgba(125, 125, 125, 0.05);
+            border: 1px solid rgba(125, 125, 125, 0.1);
+            border-radius: 1.2rem;
+            padding: 1.1rem 1.4rem;
+            width: 100%;
+            outline: none;
+            transition: all 0.3s ease;
+            color: inherit;
+        }
+
+        .custom-input:focus {
+            border-color: #18eb9a;
+            background: rgba(125, 125, 125, 0.08);
+        }
+
+        @media (max-width: 767px) {
+            html,
+            body {
+                overflow-x: hidden;
+            }
+
+            body > div {
+                max-width: 100%;
+                overflow-x: clip;
+            }
+
+            .lg\:col-span-9 {
+                min-width: 0;
+                max-width: 100%;
+                overflow: hidden;
+            }
+
+            .glass-card,
+            .glass-panel {
+                overflow: hidden;
+            }
+
+            #formPanel,
+            #submissionsPanel,
+            #dataListPanel {
+                padding: 1.5rem;
+            }
+
+            #formMainTitle {
+                font-size: clamp(2.35rem, 11vw, 3.6rem);
+                line-height: 0.92;
+                letter-spacing: -0.05em;
+                text-wrap: balance;
+                overflow-wrap: anywhere;
+                max-width: 100%;
+            }
+
+            #sectionHint {
+                letter-spacing: 0.2em;
+                line-height: 1.5;
+            }
+
+            #contentForm {
+                gap: 2rem;
+            }
+
+            .article-mode #title,
+            #title {
+                font-size: clamp(2rem, 9vw, 3rem);
+                line-height: 1;
+                padding-top: 0.5rem;
+                padding-bottom: 1rem;
+                min-width: 0;
+            }
+
+            #articleIntro {
+                margin-left: 0;
+            }
+
+            #articleTopGrid {
+                gap: 1.5rem;
+            }
+
+            .tag-pill,
+            .event-pill {
+                width: 100%;
+                min-width: 0;
+                justify-content: center;
+                padding: 0.9rem 1rem;
+                font-size: 0.7rem;
+                letter-spacing: 0.18em;
+            }
+
+            /* Force ALL form panels to behave on mobile */
+            #formPanel {
+                overflow: hidden;
+                max-width: 100%;
+                box-sizing: border-box;
+            }
+
+            #formPanel * {
+                max-width: 100%;
+                box-sizing: border-box;
+            }
+
+            #contentForm {
+                max-width: 100%;
+                overflow: hidden;
+            }
+
+            body[data-admin-type="articles"] #formPanel,
+            body[data-admin-type="events"] #formPanel {
+                padding: 1.4rem;
+            }
+
+            body[data-admin-type="articles"] #formMainTitle,
+            body[data-admin-type="events"] #formMainTitle {
+                font-size: clamp(1.6rem, 8vw, 3.25rem);
+                line-height: 0.95;
+                letter-spacing: -0.03em;
+                word-break: break-word;
+                overflow-wrap: anywhere;
+            }
+
+            body[data-admin-type="articles"] #sectionHint,
+            body[data-admin-type="events"] #sectionHint {
+                font-size: 0.72rem;
+                letter-spacing: 0.22em;
+            }
+
+            body[data-admin-type="articles"] #articleTagSelect:not(.hidden),
+            body[data-admin-type="events"] #eventCategoryPills:not(.hidden) {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 0.75rem;
+                width: 100%;
+            }
+
+            body[data-admin-type="articles"] #tagColorHint,
+            body[data-admin-type="events"] #tagColorHint,
+            body[data-admin-type="events"] #productColorHint {
+                margin-top: 0.2rem;
+            }
+
+            body[data-admin-type="articles"] #title,
+            body[data-admin-type="events"] #title {
+                font-size: clamp(1.85rem, 8vw, 2.75rem);
+            }
+
+            body[data-admin-type="articles"] #description,
+            body[data-admin-type="articles"] #adminDraftBody,
+            body[data-admin-type="events"] #description {
+                min-height: 260px;
+            }
+
+            #articleTopGrid {
+                max-width: 100%;
+                overflow: hidden;
+            }
+
+            #tagColorHint,
+            #productColorHint {
+                font-size: 0.875rem;
+                line-height: 1.4;
+            }
+
+            .custom-input {
+                min-width: 0;
+                padding: 1rem 1.1rem;
+            }
+
+            #imageLbl,
+            #fileLabel {
+                max-width: 100%;
+                min-width: 0;
+            }
+
+            #description,
+            #adminDraftBody {
+                min-height: 280px;
+                padding-left: 1rem;
+            }
+
+            #eventExtraWrap {
+                padding-top: 0.5rem;
+            }
+        }
+    </style>
+    <script src="assets/config.js"></script>
+    <script src="assets/indonesia-cities.js"></script>
+</head>
+
+<body class="min-h-screen">
+    <div class="max-w-7xl mx-auto p-6 md:p-10">
+        <header class="mb-8">
+            <p class="text-xs uppercase tracking-[0.2em] text-[#18eb9a] font-bold">Paved CMS</p>
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <h1 class="text-3xl md:text-4xl font-black italic uppercase tracking-tight">Admin Content Dashboard</h1>
+                <button type="button" onclick="logoutAdmin()" class="self-start md:self-auto px-4 py-3 rounded-xl border border-white/10 text-[10px] font-black uppercase tracking-[0.2em] text-white/70 hover:border-[#18eb9a]/40 hover:text-white transition">
+                    Logout
+                </button>
+            </div>
+        </header>
+
+        <section class="grid lg:grid-cols-12 gap-6">
+            <aside class="lg:col-span-3 glass-card rounded-3xl p-5 md:p-6 h-fit">
+                <h2 class="text-sm font-black uppercase text-white/70 mb-4">Menu</h2>
+                <nav class="space-y-2" id="typeTabs">
+                    <button data-type="articles"
+                        class="tab-btn active-tab w-full text-left px-4 py-3 rounded-xl text-xs uppercase tracking-wider font-bold border border-white/10">Articles
+                        Manager</button>
+                    <button data-type="products"
+                        class="tab-btn w-full text-left px-4 py-3 rounded-xl text-xs uppercase tracking-wider font-bold border border-white/10 hover:border-[#18eb9a]/40">Products
+                        Manager</button>
+                    <button data-type="events"
+                        class="tab-btn w-full text-left px-4 py-3 rounded-xl text-xs uppercase tracking-wider font-bold border border-white/10 hover:border-[#18eb9a]/40">Events
+                        Manager</button>
+                    <button data-type="redLetters"
+                        class="tab-btn w-full text-left px-4 py-3 rounded-xl text-xs uppercase tracking-wider font-bold border border-white/10 hover:border-[#18eb9a]/40">Red
+                        Letter Manager</button>
+                    <button data-type="ads"
+                        class="tab-btn w-full text-left px-4 py-3 rounded-xl text-xs uppercase tracking-wider font-bold border border-white/10 hover:border-[#18eb9a]/40">Ads
+                        Manager</button>
+                    <div class="pt-2 border-t border-white/10 mt-2">
+                        <button data-type="submissions"
+                            class="tab-btn w-full text-left px-4 py-3 rounded-xl text-xs uppercase tracking-wider font-bold border border-[#18eb9a]/30 text-[#18eb9a] hover:border-[#18eb9a]/60 bg-[#18eb9a]/5 mb-2" id="submissionsTab">
+                            📥 Submissions
+                            <span id="pendingBadge" class="ml-1 bg-[#18eb9a] text-black rounded-full px-1.5 py-0.5 text-[9px] font-black hidden">0</span>
+                        </button>
+                        <button data-type="settings" class="tab-btn w-full text-left px-4 py-3 rounded-xl text-xs uppercase tracking-wider font-bold border border-white/10 hover:border-[#18eb9a]/40">
+                            ⚙️ Settings
+                        </button>
+                    </div>
+                </nav>
+            </aside>
+
+            <div class="lg:col-span-9 flex flex-col gap-6">
+                <!-- FORM PANEL (write-a-story.html style) -->
+                <div id="formPanel" class="glass-panel p-5 md:p-12 mb-6">
+                    <div class="mb-12 text-center">
+                        <h1 id="formMainTitle"
+                            class="text-3xl sm:text-4xl md:text-6xl break-words font-black tracking-tight sm:tracking-tighter uppercase mb-4 text-black dark:text-white">
+                            Main Form</h1>
+                        <p id="sectionHint"
+                            class="text-black/50 dark:text-white/50 tracking-widest text-xs uppercase font-bold">
+                            Articles Manager</p>
+                    </div>
+
+                    <form id="contentForm" class="space-y-10 article-mode">
+                        <input type="hidden" id="editId">
+
+                        <div class="space-y-2">
+                            <div id="articleIntro" class="flex items-center gap-2 mb-1 ml-2 hidden">
+                                <span class="w-6 h-[1.5px] bg-[#18eb9a]"></span>
+                                <span class="text-[9px] font-black uppercase tracking-[0.4em] text-[#18eb9a]">Narrative
+                                    Identity</span>
+                            </div>
+
+                            <div class="space-y-6">
+                                <label id="lbl-title"
+                                    class="block text-[8px] font-black uppercase tracking-[0.3em] opacity-40 ml-2 text-black dark:text-white">Title</label>
+                                <input type="text" id="title" required placeholder="Give it a headline..."
+                                    class="w-full bg-transparent text-3xl md:text-5xl font-black tracking-tight leading-tight outline-none border-b-2 border-black/10 dark:border-white/10 focus:border-[#18eb9a] pb-6 transition-all placeholder:text-lg md:placeholder:text-2xl placeholder:normal-case placeholder:font-medium placeholder:tracking-normal placeholder:opacity-20 text-black dark:text-white">
+                            </div>
+                        </div>
+
+                        <div id="articleTopGrid" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div class="space-y-4">
+                                <label id="lbl-category"
+                                    class="block text-[10px] font-black uppercase tracking-[0.3em] opacity-40 ml-2 text-black dark:text-white">Category</label>
+
+                                <input id="category" required class="hidden">
+
+                                <!-- Visual Tag Pills (Articles) -->
+                                <div id="articleTagSelect" class="hidden flex flex-wrap gap-2 mt-1">
+                                    <button type="button" data-tag="Pathfinder" data-color="#0061d2"
+                                        class="tag-pill px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border border-white/20 transition-all hover:scale-105"
+                                        style="border-color: #0061d2; color: #0061d2;">Pathfinder</button>
+                                    <button type="button" data-tag="Drafts" data-color="#8cf503"
+                                        class="tag-pill px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border border-white/20 transition-all hover:scale-105"
+                                        style="border-color: #8cf503; color: #8cf503;">Drafts</button>
+                                    <button type="button" data-tag="Sticky Notes" data-color="#ffc20d"
+                                        class="tag-pill px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border border-white/20 transition-all hover:scale-105"
+                                        style="border-color: #ffc20d; color: #ffc20d;">Sticky Notes</button>
+                                    <button type="button" data-tag="Spotlight" data-color="#9147ff"
+                                        class="tag-pill px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border border-white/20 transition-all hover:scale-105"
+                                        style="border-color: #9147ff; color: #9147ff;">Spotlight</button>
+                                    <button type="button" data-tag="Red Letter" data-color="#ca1c1d"
+                                        class="tag-pill px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border border-white/20 transition-all hover:scale-105"
+                                        style="border-color: #ca1c1d; color: #ca1c1d;">Red Letter</button>
+                                </div>
+                                <p id="tagColorHint" class="hidden text-[11px] text-white/60 mt-2">Selected: <span
+                                        class="font-bold" id="tagSelectedLabel">-</span></p>
+                                <!-- Product Category Tag-Pills (like articles tags) -->
+                                <div id="productCategoryPills" class="hidden flex flex-wrap gap-2 mt-1">
+                                    <button type="button" data-tag="Digital Product" data-color="#0061d2"
+                                        class="product-pill px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border transition-all hover:scale-105"
+                                        style="border-color: #0061d2; color: #0061d2;">Digital Product</button>
+                                    <button type="button" data-tag="Journal & Kit" data-color="#ffc20d"
+                                        class="product-pill px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border transition-all hover:scale-105"
+                                        style="border-color: #ffc20d; color: #ffc20d;">Journal & Kit</button>
+                                    <button type="button" data-tag="Merchandise" data-color="#9147ff"
+                                        class="product-pill px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border transition-all hover:scale-105"
+                                        style="border-color: #9147ff; color: #9147ff;">Merchandise</button>
+                                </div>
+                                <p id="productColorHint" class="hidden text-[11px] text-white/60 mt-2">Selected: <span class="font-bold" id="productSelectedLabel">-</span></p>
+
+                                <!-- Event Category Tag-Pills (matching submit-event.html) -->
+                                <div id="eventCategoryPills" class="hidden flex flex-wrap gap-2 mt-1">
+                                    <button type="button" data-tag="Event" data-color="#9147ff"
+                                        class="event-pill flex items-center px-4 py-2 rounded-full border border-[#9147ff]/30 bg-[#9147ff]/5 text-[#9147ff] text-[9px] font-black uppercase tracking-widest transition-all duration-300 outline-none hover:scale-105">
+                                        <div class="check-inline w-0 overflow-hidden transition-all duration-300 flex items-center">
+                                            <svg class="w-2.5 h-2.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7"></path>
+                                            </svg>
+                                        </div>
+                                        <span class="whitespace-nowrap">Event</span>
+                                    </button>
+                                    <button type="button" data-tag="Place" data-color="#8cf503"
+                                        class="event-pill flex items-center px-4 py-2 rounded-full border border-[#8cf503]/30 bg-[#8cf503]/5 text-[#8cf503] text-[9px] font-black uppercase tracking-widest transition-all duration-300 outline-none hover:scale-105">
+                                        <div class="check-inline w-0 overflow-hidden transition-all duration-300 flex items-center">
+                                            <svg class="w-2.5 h-2.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7"></path>
+                                            </svg>
+                                        </div>
+                                        <span class="whitespace-nowrap">Place</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div id="imageWrap" class="space-y-4 hidden">
+                                <label id="lbl-image"
+                                    class="block text-[10px] font-black uppercase tracking-[0.3em] opacity-40 ml-2 text-black dark:text-white">Cover
+                                    Image</label>
+                                <div class="relative group">
+                                    <input type="file" class="hidden" id="imageUpload" accept="image/*"
+                                        onchange="updateImageLabel(this)">
+                                    <label for="imageUpload"
+                                        class="custom-input flex items-center justify-between cursor-pointer border-2 border-dashed border-black/10 dark:border-white/10 p-4 rounded-2xl group-hover:border-[#18eb9a] transition-all text-black dark:text-white bg-transparent">
+                                        <span id="imageLbl"
+                                            class="text-xs opacity-40 font-bold uppercase truncate pr-4">Click to upload
+                                            image...</span>
+                                        <svg class="w-5 h-5 opacity-40 group-hover:text-[#18eb9a] shrink-0" fill="none"
+                                            stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                    </label>
+                                </div>
+                                <!-- hidden input to keep image value in form payload -->
+                                <input type="hidden" id="image">
+                            </div>
+
+                            <div id="articleCoverBox" class="hidden space-y-4">
+                                <label
+                                    class="block text-[10px] font-black uppercase tracking-[0.3em] opacity-40 ml-2 text-black dark:text-white">Cover
+                                    Image</label>
+                                <div class="relative group">
+                                    <input type="file" class="hidden" id="coverUpload" accept="image/*"
+                                        onchange="updateCoverLabel(this)">
+                                    <label for="coverUpload"
+                                        class="custom-input flex items-center justify-between cursor-pointer border-2 border-dashed border-black/10 dark:border-white/10 p-4 rounded-2xl group-hover:border-[#18eb9a] transition-all text-black dark:text-white bg-transparent">
+                                        <span id="fileLabel"
+                                            class="text-xs opacity-40 font-bold uppercase truncate pr-4">Click to upload
+                                            cover...</span>
+                                        <svg class="w-5 h-5 opacity-40 group-hover:text-[#18eb9a] shrink-0" fill="none"
+                                            stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                    </label>
+                                </div>
+                                <div class="grid grid-cols-1 gap-8 mt-4">
+                                    <div class="space-y-4">
+                                        <label class="block text-[10px] font-black uppercase tracking-[0.3em] opacity-40 ml-2 text-black dark:text-white">About The Image</label>
+                                        <div class="pt-2">
+                                            <input type="text" id="article_about_image" placeholder="The story behind it or image source" class="w-full bg-transparent border-b border-black/10 dark:border-white/10 text-[10px] font-black tracking-[0.1em] outline-none focus:border-[#18eb9a] pb-3 transition-all placeholder:opacity-20 text-black dark:text-white">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- RICH TEXT EDITOR (for articles) -->
+                        <div id="adminEditorWrap" class="space-y-4 pt-6 hidden">
+                            <div class="flex items-center justify-between ml-2 mb-2 border-b border-white/5 pb-4">
+                                <label class="block text-[10px] font-black uppercase tracking-[0.3em] opacity-40 text-black dark:text-white">The Entry</label>
+                                
+                                <div class="flex flex-wrap gap-2 border border-white/10 rounded-full px-3 py-1.5 glass-panel shadow-sm">
+                                    <button type="button" id="adminBtnBold" class="p-2 rounded-full opacity-40 hover:opacity-100 transition-all active:scale-90 text-white">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 4h8a4 4 0 014 4 4 4 0 01-4 4H6z M6 12h9a4 4 0 014 4 4 4 0 01-4 4H6z"/></svg>
+                                    </button>
+                                    <button type="button" id="adminBtnItalic" class="p-2 rounded-full opacity-40 hover:opacity-100 transition-all active:scale-90 text-white">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 4h10M4 20h10M15 4L9 20"/></svg>
+                                    </button>
+                                    <div class="w-[1px] h-4 bg-white/10 self-center mx-1"></div>
+                                    <button type="button" id="adminBtnQuote" class="p-2 rounded-full opacity-40 hover:opacity-100 transition-all text-white">
+                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21L14.017 18C14.017 16.8954 14.9124 16 16.017 16H19.017C19.5693 16 20.017 15.5523 20.017 15V9C20.017 8.44772 19.5693 8 19.017 8H16.017C14.9124 8 14.017 7.10457 14.017 6V3H19.017C20.6739 3 22.017 4.34315 22.017 6V15C22.017 18.3137 19.3307 21 16.017 21H14.017ZM3 21L3 18C3 16.8954 3.89543 16 5 16H8C8.55228 16 9 15.5523 9 15V9C9 8.44772 8.55228 8 8 8H5C3.89543 8 3 7.10457 3 6V3H8C9.65685 3 11 4.34315 11 6V15C11 18.3137 8.31371 21 5 21H3Z"/></svg>
+                                    </button>
+                                    <button type="button" id="adminBtnList" class="p-2 rounded-full opacity-40 hover:opacity-100 transition-all text-white">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                                    </button>
+                                    <button type="button" id="adminBtnLine" class="p-2 rounded-full opacity-40 hover:opacity-100 transition-all text-white">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 12h14"/></svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="adminDraftBody" 
+                                 contenteditable="true"
+                                 placeholder="WRITE IT ALL OUT. JUST BE HONEST..." 
+                                 class="w-full bg-transparent min-h-[400px] text-lg leading-[1.8] outline-none border-l-2 border-white/5 focus:border-[#18eb9a] pl-8 transition-all empty:before:content-[attr(placeholder)] empty:before:opacity-20 text-white font-['Plus_Jakarta_Sans']" style="overflow-wrap: break-word; word-break: break-word;"></div>
+                        </div>
+
+                        <!-- PLAIN TEXTAREA (for non-article modes: products, events, redLetters, ads) -->
+                        <div id="plainDescWrap" class="space-y-4 pt-6">
+                            <label id="lbl-description"
+                                class="block text-[10px] font-black uppercase tracking-[0.3em] opacity-40 ml-2 text-black dark:text-white">Content
+                                / Description</label>
+                            <textarea id="description" placeholder="WRITE IT ALL OUT. JUST BE HONEST..."
+                                class="w-full bg-transparent min-h-[400px] text-lg leading-relaxed outline-none border-l-2 border-black/5 dark:border-white/5 focus:border-[#18eb9a] pl-8 transition-all placeholder:opacity-20 resize-none text-black dark:text-white"></textarea>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-10">
+                            <div id="meta1Wrap" class="space-y-4">
+                                <label id="lbl-meta1"
+                                    class="block text-[10px] font-black uppercase tracking-[0.3em] opacity-40 ml-2 text-black dark:text-white">The
+                                    Trace</label>
+                                <input type="text" id="meta1" placeholder="E.g. tags, city, or price..."
+                                    class="custom-input text-xs font-bold tracking-widest text-black dark:text-white border-b border-black/10 dark:border-white/10 outline-none focus:border-[#18eb9a]">
+                            </div>
+                            
+                            <!-- authorWrap hidden – username diambil dari The Trace (meta1) -->
+                            <div id="authorWrap" class="hidden" style="display: none;">
+                                <input type="hidden" id="authorName">
+                            </div>
+
+                            <div id="meta2Wrap" class="space-y-4">
+                                <label id="lbl-meta2"
+                                    class="block text-[10px] font-black uppercase tracking-[0.3em] opacity-40 ml-2 text-black dark:text-white">The
+                                    Connection</label>
+                                <input type="text" id="meta2" placeholder="E.g. social link, date, or track label..."
+                                    class="custom-input text-xs font-bold tracking-widest text-black dark:text-white border-b border-black/10 dark:border-white/10 outline-none focus:border-[#18eb9a]">
+                            </div>
+
+                            <!-- SPOTIFY SEARCH FOR RED LETTERS -->
+                            <div id="adminSpotifySearchWrap" class="hidden space-y-4 col-span-full">
+                                <label class="block text-[10px] font-black uppercase tracking-[0.3em] opacity-40 ml-2 text-white">Spotify Track Search</label>
+                                <div class="relative">
+                                    <input type="text" id="adminSpotifySearchInput" placeholder="Search track name..." 
+                                        class="custom-input !bg-[#121212] !border-[#282828] focus:!border-[#1DB954] text-xs font-bold text-white uppercase tracking-widest">
+                                    <div id="adminSpotifyDropdown" class="absolute left-0 right-0 mt-2 bg-white border border-black/10 rounded-2xl overflow-hidden shadow-2xl hidden max-h-60 overflow-y-auto z-[500] custom-scrollbar"></div>
+                                </div>
+                                <div id="adminSpotifyPreview" class="hidden p-3 rounded-2xl bg-[#181818] border border-[#282828] flex items-center gap-4">
+                                    <img id="adminSpImg" src="" class="w-10 h-10 rounded shadow-md object-cover bg-white/5">
+                                    <div class="flex-1 min-w-0">
+                                        <p id="adminSpTitle" class="text-white text-xs font-bold truncate"></p>
+                                        <p id="adminSpArtist" class="text-[#1DB954] text-[9px] font-bold uppercase tracking-widest truncate"></p>
+                                    </div>
+                                    <button type="button" onclick="clearAdminSpotify()" class="text-white/20 hover:text-[#ff4d4d] transition-colors p-2">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="meta3Wrap" class="space-y-4">
+                                <label id="lbl-meta3"
+                                    class="block text-[10px] font-black uppercase tracking-[0.3em] opacity-40 ml-2 text-black dark:text-white">The
+                                    Bridge (Required)</label>
+                                <input type="text" id="meta3" placeholder="E.g. tags, note, or extra info..."
+                                    class="custom-input text-xs font-bold tracking-widest text-black dark:text-white border-b border-black/10 dark:border-white/10 outline-none focus:border-[#18eb9a]">
+                            </div>
+                            
+                            <!-- ADDITIONAL ARTICLE FIELDS (Hidden by default, shown for articles) -->
+                            <div id="articleAuthorWrap" class="hidden col-span-full grid grid-cols-1 md:grid-cols-3 gap-6 pt-0 mt-6">
+                                <div class="space-y-4">
+                                    <label class="block text-[10px] font-black uppercase tracking-[0.3em] opacity-40 ml-2 text-black dark:text-white">The Trace (Author Name)</label>
+                                    <input type="text" id="article_author_name" placeholder="USERNAME ATAU ANONYMOUS" class="custom-input text-xs font-bold tracking-widest text-black dark:text-white border-b border-black/10 dark:border-white/10 outline-none focus:border-[#18eb9a]">
+                                </div>
+                                <div class="space-y-4">
+                                    <label class="block text-[10px] font-black uppercase tracking-[0.3em] opacity-40 ml-2 text-black dark:text-white">The Connection (Social)</label>
+                                    <input type="text" id="article_author_social" placeholder="@SOCIALHANDLE" class="custom-input text-xs font-bold tracking-widest text-black dark:text-white border-b border-black/10 dark:border-white/10 outline-none focus:border-[#18eb9a]">
+                                </div>
+                                <div class="space-y-4">
+                                    <label class="block text-[10px] font-black uppercase tracking-[0.3em] opacity-40 ml-2 text-black dark:text-white">The Bridge (Email)</label>
+                                    <input type="email" id="article_author_email" placeholder="EMAIL ADDRESS" class="custom-input text-xs font-bold tracking-widest text-black dark:text-white border-b border-black/10 dark:border-white/10 outline-none focus:border-[#18eb9a]">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- EVENT-ONLY EXTRA FIELDS -->
+                        <div id="eventExtraWrap" class="hidden space-y-6 pt-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="space-y-4">
+                                    <label
+                                        class="block text-[10px] font-black uppercase tracking-[0.3em] opacity-40 ml-2 text-black dark:text-white">Organizer
+                                        / Source Name</label>
+                                    <input type="text" id="eventOrganizer" placeholder="Who is behind this?"
+                                        class="custom-input text-xs font-bold text-black dark:text-white">
+                                </div>
+                                <div class="space-y-4">
+                                    <label
+                                        class="block text-[10px] font-black uppercase tracking-[0.3em] opacity-40 ml-2 text-black dark:text-white">Jump In Link / Registration</label>
+                                    <input type="text" id="eventRegInfo" placeholder="e.g. https://linktr.ee/..."
+                                        class="custom-input text-xs font-bold text-black dark:text-white">
+                                </div>
+                            </div>
+                            <div class="space-y-4">
+                                <label
+                                    class="block text-[10px] font-black uppercase tracking-[0.3em] opacity-40 ml-2 text-black dark:text-white">Your
+                                    Email (Private)</label>
+                                <input type="email" id="eventEmail" placeholder="Enter your email"
+                                    class="custom-input text-xs font-bold text-black dark:text-white">
+                            </div>
+                        </div>
+
+                        <div class="pt-12 flex flex-col items-center gap-4">
+                            <button type="submit"
+                                class="group relative px-12 py-5 bg-white text-black rounded-full overflow-hidden transition-all duration-500 hover:scale-105 active:scale-95">
+                                <span class="relative z-10 font-black uppercase italic tracking-tighter text-lg">SAVE
+                                    DATA</span>
+                                <div
+                                    class="absolute inset-0 bg-[#18eb9a] translate-y-full group-hover:translate-y-0 transition-transform duration-500">
+                                </div>
+                            </button>
+                            <button type="button" id="resetBtn"
+                                class="text-[10px] font-black uppercase tracking-widest text-white/30 hover:text-white transition mt-2">Reset
+                                Form</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- SUBMISSIONS / PENDING REVIEW PANEL -->
+                <div id="submissionsPanel" class="hidden glass-panel p-5 md:p-12 mb-6">
+                    <div class="mb-8">
+                        <h2 class="text-3xl font-black uppercase tracking-tighter text-[#18eb9a]">📥 Submissions</h2>
+                        <p class="text-xs text-white/50 uppercase tracking-widest font-bold mt-1">Review konten dari audience — Approve atau Reject</p>
+                    </div>
+
+                    <!-- PENDING ARTICLES -->
+                    <div class="mb-10">
+                        <h3 class="text-sm font-black uppercase tracking-widest text-white/60 mb-4 border-b border-white/10 pb-2">📰 Artikel Pending</h3>
+                        <div id="pendingArticlesList" class="space-y-4">
+                            <div class="text-white/30 text-sm">Loading...</div>
+                        </div>
+                    </div>
+
+                    <!-- PENDING EVENTS -->
+                    <div>
+                        <h3 class="text-sm font-black uppercase tracking-widest text-white/60 mb-4 border-b border-white/10 pb-2">📍 Event Pending</h3>
+                        <div id="pendingEventsList" class="space-y-4">
+                            <div class="text-white/30 text-sm">Loading...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SETTINGS PANEL -->
+                <div id="settingsPanel" class="hidden glass-panel p-5 md:p-12 mb-6">
+                    <div class="mb-8">
+                        <h2 class="text-3xl font-black uppercase tracking-tighter text-[#18eb9a]">⚙️ Settings</h2>
+                        <p class="text-xs text-white/50 uppercase tracking-widest font-bold mt-1">Manage Credentials & Sub-Admins</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 max-w-xl mx-auto gap-8">
+                        <!-- Update Credentials Form -->
+                        <div class="border border-white/10 rounded-2xl p-6 bg-black/20">
+                            <h3 class="text-sm font-black uppercase tracking-widest text-[#18eb9a] mb-6">Update My Credentials</h3>
+                            <form id="updateCredDataForm" class="space-y-4">
+                                <div>
+                                    <label class="block text-[10px] font-black uppercase tracking-[0.3em] opacity-40 ml-2 text-white">New Username</label>
+                                    <input type="text" id="setMyUsername" required class="custom-input text-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] font-black uppercase tracking-[0.3em] opacity-40 ml-2 text-white">New Password</label>
+                                    <input type="password" id="setMyPassword" required class="custom-input text-sm">
+                                </div>
+                                <button type="submit" class="w-full mt-4 bg-white/10 hover:bg-[#18eb9a] hover:text-black transition-colors rounded-xl py-3 text-xs font-black uppercase tracking-widest text-white">Update</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DATA LIST PANEL -->
+                <div class="glass-panel p-5 md:p-12 mb-10" id="dataListPanel">
+                    <div class="flex items-center justify-between mb-8">
+                        <h2 class="text-2xl sm:text-3xl font-black uppercase tracking-tighter">Data List</h2>
+                        <p class="text-xs text-white/50 uppercase tracking-widest font-bold">Edit / Delete dari sini</p>
+                    </div>
+                    <div id="listWrap" class="space-y-4"></div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const API_BASE = API_BASE_URL + "/api";
+        let activeType = "articles";
+        let currentData = { articles: [], products: [], events: [], redLetters: [], ads: [] };
+
+        const sectionConfig = {
+            articles: { hint: "Articles Manager", fields: { title: "Headline", category: "Tags", description: "The Entry", meta1: null, meta2: null, meta3: null, image: "Cover Image" } },
+            products: { hint: "Products Manager", fields: { title: "Product Name", category: "Category", description: "Description", meta1: "Price", meta2: "Store / Link Label", meta3: null, image: "Cover Image" } },
+            events: { hint: "Events Manager", fields: { title: "Name of the Space or Event", category: "Category", description: "\"Why should we go there?\" (Description)", meta1: "Kota", meta2: "Harga (e.g. IDR 150K / FREE)", meta3: "Date & Time (Optional)", image: "Visual Trace (Upload Image)" } },
+            redLetters: { hint: "Red Letter Manager", fields: { title: "To Name", category: null, description: "Message", meta1: "Spotify Link", meta2: null, meta3: null, image: null } },
+            ads: { hint: "Ads Manager", fields: { title: null, category: null, description: null, meta1: "Ad Target Link URL", meta2: null, meta3: null, image: "Banner Image" } }
+        };
+
+        function esc(value) {
+            return String(value == null ? '' : value)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function safeImg(value) {
+            const src = String(value || '').trim();
+            if (!src) return 'assets/Branch.png';
+            if (/^(https?:)?\/\//i.test(src) || /^assets\//i.test(src) || /^\/uploads\//i.test(src)) return src;
+            return 'assets/Branch.png';
+        }
+
+        function getAdminToken() {
+            const sessionToken = sessionStorage.getItem('token');
+            if (sessionToken) return sessionToken;
+
+            const legacyToken = localStorage.getItem('token');
+            const legacyAdmin = localStorage.getItem('admin');
+            if (legacyToken) {
+                sessionStorage.setItem('token', legacyToken);
+                if (legacyAdmin) sessionStorage.setItem('admin', legacyAdmin);
+                localStorage.removeItem('token');
+                localStorage.removeItem('admin');
+                return legacyToken;
+            }
+
+            return '';
+        }
+
+        function clearAdminSession() {
+            sessionStorage.removeItem('token');
+            sessionStorage.removeItem('admin');
+            localStorage.removeItem('token');
+            localStorage.removeItem('admin');
+        }
+
+        function redirectToLogin() {
+            window.location.href = '/login?next=' + encodeURIComponent('/admin');
+        }
+
+        function logoutAdmin() {
+            clearAdminSession();
+            redirectToLogin();
+        }
+
+        function checkLogin() {
+            const token = getAdminToken();
+            if (!token) {
+                redirectToLogin();
+                return false;
+            }
+            return true;
+        }
+
+        async function fetchApi(endpoint, method = 'GET', body = null, isFormData = false) {
+            const token = getAdminToken();
+            const headers = {};
+            if (token) headers['Authorization'] = `Bearer ${token}`;
+
+            const options = { method, headers };
+            if (body) {
+                if (isFormData) {
+                    options.body = body; // FormData, browser sets Content-Type
+                } else {
+                    headers['Content-Type'] = 'application/json';
+                    options.body = JSON.stringify(body);
+                }
+            }
+
+            const res = await fetch(`${API_BASE}${endpoint}`, options);
+            if (res.status === 401 || res.status === 403) {
+                clearAdminSession();
+                redirectToLogin();
+                throw new Error('Sesi login berakhir.');
+            }
+
+            const isJson = (res.headers.get('content-type') || '').includes('application/json');
+            const payload = res.status !== 204
+                ? (isJson ? await res.json().catch(() => null) : await res.text().catch(() => ''))
+                : null;
+
+            if (!res.ok) {
+                const message = typeof payload === 'string'
+                    ? payload
+                    : (payload && payload.message) || res.statusText;
+                throw new Error(message || 'Request failed');
+            }
+
+            return payload;
+        }
+
+        function setUploadLabelState(labelEl, text, hasFile) {
+            if (!labelEl) return;
+            labelEl.textContent = text;
+            labelEl.classList.toggle("text-[#18eb9a]", hasFile);
+            labelEl.classList.toggle("opacity-100", hasFile);
+            labelEl.classList.toggle("opacity-40", !hasFile);
+        }
+
+        function clearFileInput(fileInputId, labelId, defaultLabel) {
+            const input = document.getElementById(fileInputId);
+            if (input) input.value = '';
+            const lbl = document.getElementById(labelId);
+            setUploadLabelState(lbl, defaultLabel, false);
+        }
+
+        async function loadStore() {
+            try {
+                const token = getAdminToken();
+                const [articles, products, redLettersRes, events, ads] = await Promise.all([
+                    fetchApi(token ? '/articles/admin/all' : '/articles').catch(() => []),
+                    fetchApi('/products').catch(() => []),
+                    fetchApi('/red-letters').catch(() => []),
+                    fetchApi(token ? '/events/admin/all' : '/events').catch(() => []),
+                    fetchApi(token ? '/ads/admin/all' : '/ads/active').catch(() => [])
+                ]);
+
+                // Support both older { data: [...] } and newer { letters: [...] } shapes.
+                const redLetters = Array.isArray(redLettersRes)
+                    ? redLettersRes
+                    : (redLettersRes.letters || redLettersRes.data || []);
+                
+                currentData = { articles, products, events, redLetters, ads };
+            } catch (err) {
+                console.error("Error loading API data:", err);
+            }
+        }
+
+        async function init() {
+            if (!checkLogin()) return;
+            await loadStore();
+            renderList();
+            updateFieldLabels();
+            updatePendingBadge();
+        }
+
+        function resetForm() {
+            document.getElementById("contentForm").reset();
+            document.getElementById("editId").value = "";
+            // Clear the rich text editor
+            const adminEditor = document.getElementById("adminDraftBody");
+            if (adminEditor) adminEditor.innerHTML = '';
+            // Prevent file inputs from "sticking" across tabs
+            clearFileInput('imageUpload', 'imageLbl', 'Click to upload image...');
+            clearFileInput('coverUpload', 'fileLabel', 'Click to upload cover...');
+            const imageHidden = document.getElementById("image");
+            if (imageHidden) imageHidden.value = '';
+            if (activeType === "articles") {
+                updateTagHint();
+            }
+            if (activeType === "products") {
+                selectProductPill("Digital Product");
+            }
+            if (activeType === "events") {
+                selectEventPill("Event");
+            }
+            if (activeType === "redLetters") {
+                clearAdminSpotify();
+            }
+        }
+
+        function renderList() {
+            const list = currentData[activeType] || [];
+            const wrap = document.getElementById("listWrap");
+            if (!list.length) {
+                wrap.innerHTML = '<div class="border border-dashed border-white/20 rounded-2xl p-5 text-sm text-white/50">Belum ada data. Tambahkan konten baru dari form.</div>';
+                return;
+            }
+
+            const statusBadge = (status) => {
+                if (!status) return '';
+                const map = {
+                    pending:  { icon: '⏳', cls: 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30' },
+                    approved: { icon: '✅', cls: 'bg-[#18eb9a]/20 text-[#18eb9a] border-[#18eb9a]/30' },
+                    rejected: { icon: '❌', cls: 'bg-red-500/20 text-red-300 border-red-500/30' }
+                };
+                const s = map[status] || map.pending;
+                return `<span class="inline-block text-[9px] font-black uppercase tracking-widest border rounded-full px-2 py-0.5 ${s.cls}">${s.icon} ${status}</span>`;
+            };
+
+            wrap.innerHTML = list.map((item) => {
+                const id = item.id;
+                let title = esc(item.title || item.name || item.to || "-");
+                let cat = esc(item.category || "-");
+                // For articles with HTML content, strip tags for the preview
+                let rawDesc = item.description || item.content || item.msg || "-";
+                let desc = esc(rawDesc.replace(/<[^>]*>/g, ''));
+                
+                if (activeType === "ads") {
+                    title = esc(item.link_url || "Untitled Ad");
+                    cat = "PROMO BANNER";
+                    desc = "";
+                }
+
+                const m1 = esc(item.meta1 || item.track || item.price || item.link_url || "-");
+                const m2 = esc(item.meta2 || item.date || item.status || (item.created_at ? new Date(item.created_at).toLocaleDateString() : "-"));
+                const statusHtml = item.status ? statusBadge(item.status) : '';
+                const recommendBtn = activeType === "articles" 
+                    ? `<button data-id="${id}" class="rec-btn px-3 py-2 rounded-lg ${item.is_recommended ? 'bg-[#18eb9a] text-black' : 'bg-white/10 text-white'} text-xs font-bold uppercase transition-colors">${item.is_recommended ? '⭐ Recommended' : '☆ Recommend'}</button>` 
+                    : "";
+
+                let displayMeta;
+                if (activeType === "redLetters" && item.meta2) {
+                    displayMeta = `<p class="text-[11px] text-[#1DB954] mt-2 font-bold uppercase tracking-wider">🎵 ${item.meta2}</p>`;
+                } else if (activeType === "articles") {
+                    const authorName = esc(item.author_name || "-");
+                    const authorSocial = esc(item.author_social || "");
+                    displayMeta = `<p class="text-[11px] text-white/40 mt-2">${authorName}${authorSocial ? " • " + authorSocial : ""}</p>`;
+                } else {
+                    displayMeta = `<p class="text-[11px] text-white/40 mt-2">${m1} ${m2 !== "-" && m2 ? "• " + m2 : ""}</p>`;
+                }
+
+                return `
+                <article class="border border-white/10 rounded-2xl p-4 bg-black/20" style="overflow-wrap: break-word; word-break: break-word;">
+                    <div class="flex flex-col gap-3">
+                        <div class="min-w-0">
+                            <div class="flex items-center gap-2 mb-1 flex-wrap">
+                                <p class="text-[10px] uppercase tracking-wider text-[#18eb9a] font-bold">${cat}</p>
+                                ${statusHtml}
+                            </div>
+                            <h3 class="font-bold text-sm md:text-base truncate">${title}</h3>
+                            ${desc ? `<p class="text-xs text-white/60 mt-1 line-clamp-3">${desc}</p>` : ''}
+                            ${displayMeta}
+                        </div>
+                        <div class="flex gap-2 flex-wrap">
+                            ${recommendBtn}
+                            <button data-id="${id}" class="edit-btn px-3 py-2 rounded-lg bg-white/10 text-xs font-bold uppercase">Edit</button>
+                            <button data-id="${id}" class="del-btn px-3 py-2 rounded-lg bg-red-500/20 text-red-200 text-xs font-bold uppercase">Delete</button>
+                        </div>
+                    </div>
+                </article>
+                `;
+            }).join("");
+
+            document.querySelectorAll(".edit-btn").forEach((btn) => btn.addEventListener("click", () => fillForm(btn.dataset.id)));
+            document.querySelectorAll(".del-btn").forEach((btn) => btn.addEventListener("click", () => deleteItem(btn.dataset.id)));
+            document.querySelectorAll(".rec-btn").forEach((btn) => btn.addEventListener("click", () => toggleRecommend(btn.dataset.id)));
+        }
+
+        async function toggleRecommend(id) {
+            try {
+                await fetchApi(`/articles/admin/${id}/recommend`, 'PATCH', {});
+                await loadStore();
+                renderList();
+            } catch (err) { 
+                alert("Gagal mengatur rekomendasi: " + err.message); 
+            }
+        }
+
+        function fillForm(id) {
+            const list = currentData[activeType];
+            const item = list.find((x) => String(x.id) === String(id));
+            if (!item) return;
+
+            document.getElementById("editId").value = item.id;
+            document.getElementById("title").value = item.title || item.name || item.to || "";
+            document.getElementById("category").value = item.category || "";
+
+            if (activeType === "articles") { selectTagPill(item.category || "Pathfinder"); }
+
+            if (activeType === "products") { selectProductPill(item.category || "Digital Product"); }
+
+            if (activeType === "events") {
+                selectEventPill(item.category || "Event");
+                document.getElementById("eventOrganizer").value = item.organizer || "";
+                document.getElementById("eventRegInfo").value = item.reg_info || item.regInfo || "";
+                document.getElementById("eventEmail").value = item.email || "";
+                // Map event-specific fields to the generic meta inputs
+                document.getElementById("meta1").value = item.city || "";
+                document.getElementById("meta2").value = item.price || "";
+                document.getElementById("meta3").value = item.event_time || "";
+            }
+
+            if (activeType === "redLetters") {
+                const trackId = item.meta1 || item.track || "";
+                if (trackId) {
+                    // We don't have the full track object (name, artist, image)
+                    // But we can show the ID at least or a generic 'Loading...'
+                    // Alternatively, since meta1 might be a full URL, we extract it.
+                    document.getElementById('meta1').value = trackId;
+                    // Because we lack metadata here without re-fetching from Spotify,
+                    // we'll just show a simplified layout or the ID.
+                    // For now, let's keep search simple.
+                } else {
+                    clearAdminSpotify();
+                }
+            }
+
+            // For articles, load content into the rich text editor; for others, use the textarea
+            if (activeType === "articles") {
+                const adminEditor = document.getElementById("adminDraftBody");
+                if (adminEditor) adminEditor.innerHTML = item.content || item.description || "";
+            } else {
+                document.getElementById("description").value = item.content || item.description || item.msg || "";
+            }
+            // For events, city/price/event_time are already set above; skip generic fallback
+            if (activeType !== "events") {
+                document.getElementById("meta1").value = item.meta1 || item.track || item.price || item.link_url || "";
+                document.getElementById("meta2").value = item.meta2 || item.date || item.status || "";
+            }
+            if (document.getElementById("authorName")) {
+                document.getElementById("authorName").value = item.author_name || item.author || "";
+            }
+            if (activeType === "articles" && document.getElementById("article_author_name")) {
+                document.getElementById("article_author_name").value = item.author_name || item.author || "";
+                document.getElementById("article_author_social").value = item.author_social || "";
+                document.getElementById("article_author_email").value = item.author_email || "";
+                document.getElementById("article_about_image").value = item.meta2 || "";
+            }
+            document.getElementById("image").value = item.image || item.image_url || "";
+
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        async function deleteItem(id) {
+            if (!confirm("Yakin hapus data ini?")) return;
+            try {
+                const endpoint = activeType === "redLetters" ? "/red-letters" : `/${activeType}`;
+                await fetchApi(`${endpoint}/${id}`, "DELETE");
+                await loadStore();
+                renderList();
+            } catch (err) { alert("Gagal menghapus: " + err.message); }
+        }
+
+        document.getElementById("contentForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            // Category is already set in the hidden #category input by pill selection functions
+
+            const id = document.getElementById("editId").value;
+
+            // Use FormData for events (to support image upload)
+            const isEvents = activeType === "events";
+            const isProducts = activeType === "products";
+
+            // For events and products, use FormData with file upload support
+            const imageFile = document.getElementById("imageUpload")?.files?.[0];
+            const coverFile = document.getElementById("coverUpload")?.files?.[0];
+
+            let useFormData = !!(imageFile || coverFile);
+
+            const endpoint = activeType === "redLetters" ? "/red-letters" : `/${activeType}`;
+            const method = id ? "PUT" : "POST";
+            // Admin dashboard should auto-publish when creating new article/event.
+            const token = getAdminToken();
+            const isAdminCreate = !id && (activeType === "articles" || activeType === "events" || activeType === "ads");
+            const url = id
+                ? `${endpoint}/${id}`
+                : (isAdminCreate ? `${endpoint}/admin` : endpoint);
+
+            // For articles, get content from the rich text editor; for others, from the textarea
+            const editorContent = activeType === "articles"
+                ? (document.getElementById("adminDraftBody")?.innerHTML || '').trim()
+                : document.getElementById("description").value.trim();
+
+            const payload = {
+                title: document.getElementById("title").value.trim(),
+                name: document.getElementById("title").value.trim(),
+                content: editorContent,
+                description: editorContent,
+                category: document.getElementById("category").value.trim(),
+                meta1: document.getElementById("meta1").value.trim(),
+                price: activeType === "events" ? document.getElementById("meta2").value.trim() : document.getElementById("meta1").value.trim(),
+                meta2: activeType === 'articles' ? document.getElementById("article_about_image").value.trim() : document.getElementById("meta2").value.trim(),
+                author_name: activeType === 'articles' ? document.getElementById("article_author_name").value.trim() : (document.getElementById("authorName")?.value?.trim() || ''),
+                author_social: activeType === 'articles' ? document.getElementById("article_author_social").value.trim() : '',
+                author_email: activeType === 'articles' ? document.getElementById("article_author_email").value.trim() : (document.getElementById("eventEmail")?.value?.trim() || ''),
+                organizer: document.getElementById("eventOrganizer")?.value?.trim() || '',
+                reg_info: document.getElementById("eventRegInfo")?.value?.trim() || '',
+                email: document.getElementById("eventEmail")?.value?.trim() || '',
+                event_time: document.getElementById("meta3")?.value?.trim() || '',
+                city: document.getElementById("meta1")?.value?.trim() || '',
+                image: document.getElementById("image").value.trim()
+            };
+
+            if (activeType === "redLetters") {
+                payload.meta1 = document.getElementById("meta1").value.trim() || resolveSpotifyTrackInput(document.getElementById("adminSpotifySearchInput")?.value || '');
+            } else if (activeType === "ads") {
+                payload.link_url = document.getElementById("meta1").value.trim();
+                payload.status = document.getElementById("meta2").value.trim();
+            }
+
+            try {
+                if (useFormData) {
+                    const fd = new FormData();
+                    Object.entries(payload).forEach(([k, v]) => { if (v !== undefined) fd.append(k, v); });
+                    if (imageFile) fd.append('image', imageFile);
+                    if (coverFile) fd.append('image', coverFile);
+                    await fetchApi(url, method, fd, true);
+                } else {
+                    await fetchApi(url, method, payload);
+                }
+                resetForm();
+                await loadStore();
+                renderList();
+                alert("Berhasil menyimpan data!");
+            } catch (err) {
+                alert("Gagal menyimpan. Pastikan Anda sudah login. Error: " + err.message);
+            }
+        });
+
+        document.getElementById("resetBtn").addEventListener("click", resetForm);
+
+        document.querySelectorAll(".tab-btn").forEach((btn) => {
+            btn.addEventListener("click", async () => {
+                const overlay = document.getElementById("refreshOverlay");
+                if (overlay) {
+                    overlay.classList.remove("opacity-0", "pointer-events-none");
+                }
+
+                activeType = btn.dataset.type;
+                document.querySelectorAll(".tab-btn").forEach((b) => b.classList.remove("active-tab"));
+                btn.classList.add("active-tab");
+
+                const isSubmissions = (activeType === "submissions");
+                const isSettings = (activeType === "settings");
+
+                // Toggle panel visibility
+                document.getElementById("formPanel").classList.toggle("hidden", isSubmissions || isSettings);
+                document.getElementById("dataListPanel").classList.toggle("hidden", isSubmissions || isSettings);
+                document.getElementById("submissionsPanel").classList.toggle("hidden", !isSubmissions);
+                document.getElementById("settingsPanel").classList.toggle("hidden", !isSettings);
+
+                // Fetch data fresh on tab change (refresh tanpa reload manual)
+                await loadStore();
+
+                if (isSubmissions) {
+                    renderSubmissions();
+                } else {
+                    resetForm();
+                    renderList();
+                    updateFieldLabels();
+                }
+
+                if (overlay) {
+                    setTimeout(() => {
+                        overlay.classList.add("opacity-0", "pointer-events-none");
+                    }, 500);
+                }
+            });
+        });
+
+        // ── Submissions (Pending Review) ──────────────────────────────────────
+
+        async function renderSubmissions() {
+            const articleWrap = document.getElementById("pendingArticlesList");
+            const eventWrap = document.getElementById("pendingEventsList");
+            articleWrap.innerHTML = '<div class="text-white/30 text-sm">Loading...</div>';
+            eventWrap.innerHTML  = '<div class="text-white/30 text-sm">Loading...</div>';
+
+            try {
+                const [allArticles, allEvents] = await Promise.all([
+                    fetchApi('/articles/admin/all').catch(() => []),
+                    fetchApi('/events/admin/all').catch(() => [])
+                ]);
+
+                const pendingArticles = allArticles.filter(a => a.status === 'pending');
+                const pendingEvents   = allEvents.filter(e => e.status === 'pending');
+
+                // Update badge count
+                const totalPending = pendingArticles.length + pendingEvents.length;
+                const badge = document.getElementById("pendingBadge");
+                if (badge) {
+                    badge.textContent = totalPending;
+                    badge.classList.toggle("hidden", totalPending === 0);
+                }
+
+                // Render pending articles
+                if (pendingArticles.length === 0) {
+                    articleWrap.innerHTML = '<div class="border border-dashed border-white/10 rounded-2xl p-5 text-sm text-white/30">Tidak ada artikel pending. ✅</div>';
+                } else {
+                    articleWrap.innerHTML = pendingArticles.map(a => `
+                        <article class="border border-yellow-500/30 rounded-2xl p-5 bg-yellow-500/5">
+                            <div class="flex flex-col md:flex-row md:items-start gap-4">
+                                ${a.image_url ? `<img src="${safeImg(API_BASE_URL + a.image_url)}" class="w-full md:w-28 h-20 object-cover rounded-xl shrink-0 bg-white/5" onerror="this.style.display='none'">` : ''}
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="text-[9px] font-black uppercase tracking-widest border rounded-full px-2 py-0.5 bg-yellow-500/20 text-yellow-300 border-yellow-500/30">⏳ Pending</span>
+                                        <span class="text-[9px] text-white/40 uppercase tracking-widest">${esc(a.category || 'Tanpa Kategori')}</span>
+                                    </div>
+                                    <h3 class="font-black text-base tracking-tight leading-snug">${esc(a.title || '-')}</h3>
+                                    <p class="text-xs text-white/50 mt-1 line-clamp-2">${esc(a.description || a.content || '-')}</p>
+                                    <div class="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-[11px] text-white/40">
+                                        <span>👤 ${a.author_name || 'Anonim'}</span>
+                                        ${a.author_email ? `<span>✉️ ${a.author_email}</span>` : ''}
+                                        ${a.author_social ? `<span>🔗 ${a.author_social}</span>` : ''}
+                                        <span>🕒 ${new Date(a.created_at).toLocaleString('id-ID')}</span>
+                                    </div>
+                                </div>
+                                <div class="flex md:flex-col gap-2 shrink-0">
+                                    <button onclick="approveItem('articles', ${a.id})"
+                                        class="px-4 py-2 rounded-xl bg-[#18eb9a]/20 text-[#18eb9a] border border-[#18eb9a]/40 text-xs font-black uppercase hover:bg-[#18eb9a] hover:text-black transition-all">
+                                        ✅ Approve
+                                    </button>
+                                    <button onclick="rejectItem('articles', ${a.id})"
+                                        class="px-4 py-2 rounded-xl bg-red-500/20 text-red-300 border border-red-500/30 text-xs font-black uppercase hover:bg-red-500 hover:text-white transition-all">
+                                        ❌ Reject
+                                    </button>
+                                </div>
+                            </div>
+                        </article>
+                    `).join('');
+                }
+
+                // Render pending events
+                if (pendingEvents.length === 0) {
+                    eventWrap.innerHTML = '<div class="border border-dashed border-white/10 rounded-2xl p-5 text-sm text-white/30">Tidak ada event pending. ✅</div>';
+                } else {
+                    eventWrap.innerHTML = pendingEvents.map(ev => `
+                        <article class="border border-yellow-500/30 rounded-2xl p-5 bg-yellow-500/5">
+                            <div class="flex flex-col md:flex-row md:items-start gap-4">
+                                ${ev.image_url ? `<img src="${safeImg(API_BASE_URL + ev.image_url)}" class="w-full md:w-28 h-20 object-cover rounded-xl shrink-0 bg-white/5" onerror="this.style.display='none'">` : ''}
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="text-[9px] font-black uppercase tracking-widest border rounded-full px-2 py-0.5 bg-yellow-500/20 text-yellow-300 border-yellow-500/30">⏳ Pending</span>
+                                        <span class="text-[9px] text-white/40 uppercase tracking-widest">${esc(ev.category || '')}</span>
+                                    </div>
+                                    <h3 class="font-black text-base tracking-tight leading-snug">${esc(ev.title || '-')}</h3>
+                                    <p class="text-xs text-white/50 mt-1 line-clamp-2">${esc(ev.description || '-')}</p>
+                                    <div class="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-[11px] text-white/40">
+                                        ${ev.city ? `<span>📍 ${ev.city}</span>` : ''}
+                                        ${ev.price ? `<span>💰 ${ev.price}</span>` : ''}
+                                        ${ev.organizer ? `<span>🏷️ ${ev.organizer}</span>` : ''}
+                                        ${ev.email ? `<span>✉️ ${ev.email}</span>` : ''}
+                                        <span>🕒 ${new Date(ev.created_at).toLocaleString('id-ID')}</span>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col gap-2 shrink-0 min-w-[140px]">
+                                    <input type="text" id="price-events-${ev.id}" placeholder="IDR ..." 
+                                        class="custom-input !py-2 !px-3 text-xs font-bold w-full bg-black/50" 
+                                        oninput="if(!this.value.startsWith('IDR ')){this.value = 'IDR ' + this.value.replace(/^IDR\s*/, '');}">
+                                    <button onclick="approveItem('events', ${ev.id})"
+                                        class="px-4 py-2 rounded-xl bg-[#18eb9a]/20 text-[#18eb9a] border border-[#18eb9a]/40 text-xs font-black uppercase hover:bg-[#18eb9a] hover:text-black transition-all">
+                                        ✅ Approve
+                                    </button>
+                                    <button onclick="rejectItem('events', ${ev.id})"
+                                        class="px-4 py-2 rounded-xl bg-red-500/20 text-red-300 border border-red-500/30 text-xs font-black uppercase hover:bg-red-500 hover:text-white transition-all">
+                                        ❌ Reject
+                                    </button>
+                                </div>
+                            </div>
+                        </article>
+                    `).join('');
+                }
+            } catch (err) {
+                articleWrap.innerHTML = `<div class="text-red-400 text-sm">Error memuat data: ${esc(err.message)}</div>`;
+                eventWrap.innerHTML = '';
+            }
+        }
+
+        async function approveItem(type, id) {
+            if (!confirm(`Approve ${type === 'articles' ? 'artikel' : 'event'} ini dan publish ke halaman publik?`)) return;
+            try {
+                let payload = {}; // always send at least an empty object so Content-Type gets set
+                if (type === 'events') {
+                    const priceInput = document.getElementById(`price-events-${id}`);
+                    const priceVal = priceInput ? priceInput.value.trim() : '';
+                    if (priceVal && priceVal !== 'IDR' && priceVal !== 'IDR ') {
+                        payload.price = priceVal;
+                    }
+                }
+                
+                await fetchApi(`/${type}/admin/${id}/approve`, 'PATCH', payload);
+                await renderSubmissions();
+                // Refresh badge on sidebar
+                updatePendingBadge();
+            } catch (err) {
+                alert("Gagal approve: " + err.message);
+            }
+        }
+
+        async function rejectItem(type, id) {
+            if (!confirm(`Reject ${type === 'articles' ? 'artikel' : 'event'} ini?`)) return;
+            try {
+                await fetchApi(`/${type}/admin/${id}/reject`, 'PATCH');
+                await renderSubmissions();
+                updatePendingBadge();
+            } catch (err) {
+                alert("Gagal reject: " + err.message);
+            }
+        }
+
+        async function updatePendingBadge() {
+            try {
+                const [allArticles, allEvents] = await Promise.all([
+                    fetchApi('/articles/admin/all').catch(() => []),
+                    fetchApi('/events/admin/all').catch(() => [])
+                ]);
+                const total = allArticles.filter(a => a.status === 'pending').length +
+                              allEvents.filter(e => e.status === 'pending').length;
+                const badge = document.getElementById("pendingBadge");
+                if (badge) {
+                    badge.textContent = total;
+                    badge.classList.toggle("hidden", total === 0);
+                }
+            } catch {}
+        }
+
+
+        function updateFieldLabels() {
+            const cfg = sectionConfig[activeType] || sectionConfig.articles;
+            document.body.dataset.adminType = activeType;
+
+            const lblTitle = document.getElementById("lbl-title");
+            const lblCategory = document.getElementById("lbl-category");
+            const lblDescription = document.getElementById("lbl-description");
+            const lblMeta1 = document.getElementById("lbl-meta1");
+            const lblMeta2 = document.getElementById("lbl-meta2");
+            const lblMeta3 = document.getElementById("lbl-meta3");
+            const lblAuthor = document.getElementById("lbl-author");
+            const lblImage = document.getElementById("lbl-image");
+
+            if (lblTitle) lblTitle.textContent = cfg.fields.title;
+            if (lblCategory) lblCategory.textContent = cfg.fields.category || "Category";
+            if (lblDescription) lblDescription.textContent = cfg.fields.description;
+            if (lblMeta1) lblMeta1.textContent = cfg.fields.meta1;
+            if (lblMeta2) lblMeta2.textContent = cfg.fields.meta2 || "";
+            if (lblMeta3) lblMeta3.textContent = cfg.fields.meta3 || "Meta 3";
+            if (lblAuthor) lblAuthor.textContent = "Author Name";
+            if (lblImage) lblImage.textContent = cfg.fields.image || "Cover Image";
+
+            // Show/hide meta1, meta2, meta3 based on config
+            const meta1Wrap = document.getElementById("meta1Wrap");
+            if (meta1Wrap) meta1Wrap.style.display = cfg.fields.meta1 ? "block" : "none";
+            document.getElementById("meta3Wrap").style.display = cfg.fields.meta3 ? "block" : "none";
+            document.getElementById("meta2Wrap").style.display = cfg.fields.meta2 ? "block" : "none";
+            
+            const isRedLetter = activeType === "redLetters";
+            document.getElementById("adminSpotifySearchWrap").classList.toggle("hidden", !isRedLetter);
+            document.getElementById("meta1").parentElement.classList.toggle("hidden", isRedLetter);
+            
+            document.getElementById("sectionHint").textContent = cfg.hint;
+            document.getElementById("formMainTitle").textContent = cfg.hint;
+
+            const isArticle = activeType === "articles";
+            const isProduct = activeType === "products";
+            const isEvent = activeType === "events";
+            const isAds = activeType === "ads";
+
+            if (document.getElementById("authorWrap")) {
+                // authorWrap always hidden – username comes from The Trace (meta1)
+                document.getElementById("authorWrap").style.display = "none";
+            }
+            const categoryInput = document.getElementById("category");
+
+            document.getElementById("contentForm").classList.toggle("article-mode", isArticle);
+            document.getElementById("articleIntro").classList.toggle("hidden", !isArticle);
+            document.getElementById("articleCoverBox").classList.toggle("hidden", !isArticle);
+            if(document.getElementById("articleAuthorWrap")) document.getElementById("articleAuthorWrap").classList.toggle("hidden", !isArticle);
+
+            // imageWrap: hide for articles and redLetters. SHOW for ads.
+            document.getElementById("imageWrap").classList.toggle("hidden", isArticle || isRedLetter);
+
+            // Toggle rich text editor vs plain textarea
+            const adminEditorWrap = document.getElementById("adminEditorWrap");
+            const plainDescWrap = document.getElementById("plainDescWrap");
+            if (adminEditorWrap) adminEditorWrap.classList.toggle("hidden", !isArticle);
+            if (plainDescWrap) plainDescWrap.classList.toggle("hidden", isArticle || isAds);
+
+            // Hide Title and Description for Ads
+            const titleInput = document.getElementById("title");
+            const descInput = document.getElementById("description");
+            
+            if (titleInput) {
+                const titleGroup = titleInput.closest('.space-y-6');
+                if (titleGroup) titleGroup.classList.toggle("hidden", isAds);
+                titleInput.required = !isAds;
+            }
+            if (descInput) {
+                descInput.required = !isAds && !isArticle;
+            }
+
+            // Category area: hide entire articleTopGrid for redLetters. 
+            // For ads, we need articleTopGrid visible because it contains imageWrap, but hide category pills.
+            const artTopGrid = document.getElementById("articleTopGrid");
+            if (artTopGrid) artTopGrid.style.display = (isRedLetter) ? "none" : "";
+            
+            const categoryLabel = document.getElementById("lbl-category");
+            if (categoryLabel) {
+                categoryLabel.closest('.space-y-4').classList.toggle("hidden", isAds || isRedLetter);
+            }
+
+            // Important: avoid hidden required field blocking submit in Red Letter / Ads mode.
+            if (categoryInput) {
+                categoryInput.required = !isRedLetter && !isAds;
+                if ((isRedLetter || isAds) && !categoryInput.value.trim()) {
+                    categoryInput.value = isAds ? "Ad" : "Red Letter";
+                }
+            }
+
+            document.getElementById("category").classList.toggle("hidden", isArticle || isRedLetter);
+            document.getElementById("articleTagSelect").classList.toggle("hidden", !isArticle);
+            document.getElementById("tagColorHint").classList.toggle("hidden", !isArticle);
+
+            // Product pills
+            document.getElementById("productCategoryPills").classList.toggle("hidden", !isProduct);
+            document.getElementById("productColorHint").classList.toggle("hidden", !isProduct);
+
+            // Event pills
+            document.getElementById("eventCategoryPills").classList.toggle("hidden", !isEvent);
+            document.getElementById("eventExtraWrap").classList.toggle("hidden", !isEvent);
+
+            // Switch meta3 input type: datetime-local for events, text otherwise
+            const meta3Input = document.getElementById("meta3");
+            if (meta3Input) { try { meta3Input.type = isEvent ? "datetime-local" : "text"; } catch(e) {} }
+
+            // Add custom autocomplete for city input when in events mode
+            const meta1Input = document.getElementById("meta1");
+            if (isEvent && meta1Input) {
+                meta1Input.removeAttribute("data-autocomplete-disabled");
+                meta1Input.placeholder = "Pilih atau ketik kota...";
+                if (window.setupCityAutocomplete) window.setupCityAutocomplete("meta1");
+            } else if (meta1Input) {
+                meta1Input.setAttribute("data-autocomplete-disabled", "true");
+                // Reset placeholder for non-event modes (prevents "kota" placeholder leaking)
+                meta1Input.placeholder = isAds ? "https://target-link-iklan.com" : (isProduct ? "IDR 150K / FREE" : isArticle ? "Author username or name..." : "");
+            }
+
+            // Update meta2 placeholder based on active type
+            const meta2Input = document.getElementById("meta2");
+            if (meta2Input) {
+                if (isEvent) meta2Input.placeholder = "IDR 150K / FREE";
+                else if (isProduct) meta2Input.placeholder = "Store link or label...";
+                else if (isArticle) meta2Input.placeholder = "About the image or source...";
+                else meta2Input.placeholder = "";
+            }
+
+            if (isProduct || isEvent || isRedLetter) document.getElementById("category").classList.add("hidden");
+            if (isArticle) { selectTagPill(document.getElementById("category").value || "Pathfinder"); }
+            if (isProduct) { selectProductPill(document.getElementById("category").value || "Digital Product"); }
+            if (isEvent) { selectEventPill(document.getElementById("category").value || "Event"); }
+        }
+
+        function selectTagPill(tagValue) {
+            const pills = document.querySelectorAll(".tag-pill");
+            pills.forEach(pill => {
+                const color = pill.dataset.color;
+                const isActive = pill.dataset.tag === tagValue;
+                pill.style.backgroundColor = isActive ? color : "transparent";
+                pill.style.color = isActive ? "#000" : color;
+                pill.style.borderColor = color;
+            });
+            document.getElementById("category").value = tagValue || "Pathfinder";
+            const hint = document.getElementById("tagSelectedLabel");
+            if (hint) hint.textContent = tagValue || "-";
+        }
+
+        function updateTagHint() {
+            const category = document.getElementById("category").value || "Pathfinder";
+            selectTagPill(category);
+        }
+
+        // ── Product Pill Selection (like articles tags) ──
+        function selectProductPill(tagValue) {
+            const pills = document.querySelectorAll(".product-pill");
+            pills.forEach(pill => {
+                const color = pill.dataset.color;
+                const isActive = pill.dataset.tag === tagValue;
+                pill.style.backgroundColor = isActive ? color : "transparent";
+                pill.style.color = isActive ? "#000" : color;
+                pill.style.borderColor = color;
+            });
+            document.getElementById("category").value = tagValue || "Digital Product";
+            const hint = document.getElementById("productSelectedLabel");
+            if (hint) hint.textContent = tagValue || "-";
+        }
+
+        // ── Event Pill Selection (matching submit-event.html style) ──
+        function selectEventPill(tagValue) {
+            const pills = document.querySelectorAll(".event-pill");
+            pills.forEach(pill => {
+                const tag = pill.dataset.tag;
+                const color = pill.dataset.color;
+                const isActive = tag === tagValue;
+                const checkEl = pill.querySelector('.check-inline');
+                
+                if (isActive) {
+                    pill.style.backgroundColor = color;
+                    pill.style.color = '#000';
+                    pill.style.borderColor = color;
+                    if (checkEl) checkEl.style.width = '16px';
+                    pill.style.transform = 'scale(1.08)';
+                } else {
+                    pill.style.backgroundColor = '';
+                    pill.style.color = color;
+                    pill.style.borderColor = '';
+                    if (checkEl) checkEl.style.width = '0px';
+                    pill.style.transform = 'scale(1)';
+                }
+            });
+            document.getElementById("category").value = tagValue || "Event";
+        }
+
+        // ── City Datalist Dihapus, menggunakan script dari indonesia-cities.js ──
+
+        function updateImageLabel(input) {
+            const fileName = input.files && input.files[0] ? input.files[0].name : "Click to upload image...";
+            setUploadLabelState(document.getElementById("imageLbl"), fileName, !!(input.files && input.files[0]));
+        }
+
+        function updateCoverLabel(input) {
+            const fileName = input.files && input.files[0] ? input.files[0].name : "Click to upload cover...";
+            setUploadLabelState(document.getElementById("fileLabel"), fileName, !!(input.files && input.files[0]));
+        }
+
+        // ── Pill Click Handlers ──
+        document.getElementById("articleTagSelect").addEventListener("click", (e) => {
+            const pill = e.target.closest(".tag-pill");
+            if (pill) selectTagPill(pill.dataset.tag);
+        });
+
+        document.getElementById("productCategoryPills").addEventListener("click", (e) => {
+            const pill = e.target.closest(".product-pill");
+            if (pill) selectProductPill(pill.dataset.tag);
+        });
+
+        document.getElementById("eventCategoryPills").addEventListener("click", (e) => {
+            const pill = e.target.closest(".event-pill");
+            if (pill) selectEventPill(pill.dataset.tag);
+        });
+
+        // Add IDR formatting script for meta2
+        const meta2Input = document.getElementById('meta2');
+        if (meta2Input) {
+            meta2Input.addEventListener('input', function() {
+                if (activeType === 'events') {
+                    if (!this.value.startsWith('IDR ')) {
+                        this.value = 'IDR ' + this.value.replace(/^IDR\s*/, '');
+                    }
+                }
+            });
+        }
+
+        // Default select first tag on load
+        selectTagPill("Pathfinder");
+
+        function resolveSpotifyTrackInput(value) {
+            const raw = String(value || '').trim();
+            const urlMatch = raw.match(/track\/([a-zA-Z0-9]+)/i);
+            if (urlMatch) return urlMatch[1];
+            return /^[a-zA-Z0-9]{22}$/.test(raw) ? raw : '';
+        }
+
+        function escapeJsString(value) {
+            return String(value == null ? '' : value)
+                .replace(/\\/g, '\\\\')
+                .replace(/'/g, "\\'");
+        }
+
+        // SPOTIFY SEARCH FOR ADMIN RED LETTERS
+        let adminSpotifySearchTimeout = null;
+        const admInput = document.getElementById('adminSpotifySearchInput');
+        const admDropdown = document.getElementById('adminSpotifyDropdown');
+        const admPreview = document.getElementById('adminSpotifyPreview');
+        const admHiddenInput = document.getElementById('meta1');
+        const admTrackLabelInput = document.getElementById('meta2');
+
+        if (admInput) {
+            admInput.addEventListener('input', function() {
+                clearTimeout(adminSpotifySearchTimeout);
+                const query = this.value.trim();
+                
+                if (query.length < 2) {
+                    admDropdown.classList.add('hidden');
+                    return;
+                }
+
+                admDropdown.classList.remove('hidden');
+                admDropdown.innerHTML = `<div class="p-4 text-center text-[#1DB954] text-[10px] font-bold uppercase animate-pulse">Searching on Spotify...</div>`;
+
+                adminSpotifySearchTimeout = setTimeout(async () => {
+                    try {
+                        const apiBase = String(API_BASE_URL || '').replace(/\/+$/, '');
+                        const res = await fetch(`${apiBase}/api/spotify/search?q=${encodeURIComponent(query)}&limit=10`);
+                        const payload = await res.json().catch(() => ({}));
+                        if (!res.ok) throw new Error(payload.message || 'Search failed');
+                        const tracks = Array.isArray(payload)
+                            ? payload
+                            : (Array.isArray(payload && payload.tracks) ? payload.tracks : []);
+                        
+                        if (tracks.length === 0) {
+                            admDropdown.innerHTML = `<div class="p-4 text-center text-white/40 text-[10px] font-bold uppercase">No tracks found.</div>`;
+                            return;
+                        }
+
+                        admDropdown.innerHTML = tracks.map(track => `
+                            <div class="p-3 hover:bg-gray-100 cursor-pointer flex items-center gap-3 transition border-b border-black/5 last:border-0 group/item"
+                                 onclick="selectAdminSpotify('${escapeJsString(track.id)}', '${escapeJsString(track.name)}', '${escapeJsString(track.artist)}', '${escapeJsString(safeImg(track.image))}')">
+                                <img src="${safeImg(track.image)}" class="w-10 h-10 rounded bg-black/5 object-cover shrink-0">
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-black text-xs font-bold truncate group-hover/item:text-[#1DB954] transition-colors">${esc(track.name)}</p>
+                                    <p class="text-[#1DB954] text-[9px] font-bold uppercase truncate transition-colors">${esc(track.artist)}</p>
+                                </div>
+                            </div>
+                        `).join('');
+                    } catch (err) {
+                        admDropdown.innerHTML = `<div class="p-4 text-center"><p class="text-red-500 text-[10px] font-bold uppercase mb-1">Spotify Search Failed</p><p class="text-[11px] text-white/45 normal-case tracking-normal">${esc(err.message)}</p></div>`;
+                    }
+                }, 600);
+            });
+        }
+
+        window.selectAdminSpotify = function(id, name, artist, image) {
+            admHiddenInput.value = id;
+            admInput.value = "";
+            admDropdown.classList.add('hidden');
+            if (admTrackLabelInput) {
+                admTrackLabelInput.value = [name, artist].filter(Boolean).join(' - ');
+            }
+            
+            admPreview.classList.remove('hidden');
+            document.getElementById('adminSpImg').src = safeImg(image);
+            document.getElementById('adminSpTitle').textContent = name;
+            document.getElementById('adminSpArtist').textContent = artist;
+            admInput.classList.add('hidden');
+        };
+
+        window.clearAdminSpotify = function() {
+            admHiddenInput.value = '';
+            if (admTrackLabelInput) admTrackLabelInput.value = '';
+            admPreview.classList.add('hidden');
+            admInput.classList.remove('hidden');
+            admInput.value = '';
+            admInput.focus();
+        };
+
+        // Close dropdown clicks outside
+        document.addEventListener('click', (e) => {
+            if (admDropdown && !admDropdown.contains(e.target) && e.target !== admInput) {
+                admDropdown.classList.add('hidden');
+            }
+        });
+
+        // ── Settings (Update Credentials & Sub-Admin) ──────────────────────
+        document.getElementById("updateCredDataForm")?.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const username = document.getElementById("setMyUsername").value.trim();
+            const password = document.getElementById("setMyPassword").value;
+            try {
+                if(!confirm("Are you sure you want to update your credentials? You will be asked to log in again after success.")) return;
+                const res = await fetchApi('/auth/update', 'PUT', { username, password });
+                alert(res.message || "Credentials updated successfully!");
+                document.getElementById("setMyPassword").value = '';
+                logoutAdmin();
+            } catch (err) {
+                alert("Update failed: " + err.message);
+            }
+        });
+
+        // ── Rich Text Editor Toolbar Logic ──────────────────────────
+        (function() {
+            const adminBtns = {
+                bold: document.getElementById('adminBtnBold'),
+                italic: document.getElementById('adminBtnItalic'),
+                quote: document.getElementById('adminBtnQuote'),
+                list: document.getElementById('adminBtnList'),
+                line: document.getElementById('adminBtnLine')
+            };
+            const adminEditor = document.getElementById('adminDraftBody');
+
+            function adminHandleFormat(e, cmd, val) {
+                e.preventDefault();
+                if (cmd === 'formatBlock' && val === 'blockquote') {
+                    const currentBlock = document.queryCommandValue('formatBlock');
+                    if (currentBlock === 'blockquote') {
+                        document.execCommand('formatBlock', false, 'p');
+                    } else {
+                        document.execCommand('formatBlock', false, 'blockquote');
+                    }
+                } else if (cmd === 'insertLine') {
+                    const lineHtml = '<p><br></p><div class="flex justify-center items-center py-6 select-none cursor-default" contenteditable="false"><div class="w-24 h-1.5 bg-[#18eb9a] rounded-full"></div></div><p><br></p>';
+                    document.execCommand('insertHTML', false, lineHtml);
+                } else {
+                    document.execCommand(cmd, false, val);
+                }
+                adminEditor.focus();
+                adminUpdateToolbar();
+            }
+
+            adminBtns.bold.addEventListener('mousedown', (e) => adminHandleFormat(e, 'bold', null));
+            adminBtns.italic.addEventListener('mousedown', (e) => adminHandleFormat(e, 'italic', null));
+            adminBtns.quote.addEventListener('mousedown', (e) => adminHandleFormat(e, 'formatBlock', 'blockquote'));
+            adminBtns.list.addEventListener('mousedown', (e) => adminHandleFormat(e, 'insertUnorderedList', null));
+            adminBtns.line.addEventListener('mousedown', (e) => adminHandleFormat(e, 'insertLine', null));
+
+            function adminUpdateToolbar() {
+                const checkState = (btn, cmd, isBlock) => {
+                    const isActive = isBlock
+                        ? document.queryCommandValue('formatBlock') === cmd
+                        : document.queryCommandState(cmd);
+                    if (isActive) {
+                        btn.classList.add('text-[#18eb9a]', 'bg-[#18eb9a]/10', 'ring-1', 'ring-[#18eb9a]/30', 'opacity-100');
+                        btn.classList.remove('opacity-40');
+                    } else {
+                        btn.classList.remove('text-[#18eb9a]', 'bg-[#18eb9a]/10', 'ring-1', 'ring-[#18eb9a]/30', 'opacity-100');
+                        btn.classList.add('opacity-40');
+                    }
+                };
+                checkState(adminBtns.bold, 'bold', false);
+                checkState(adminBtns.italic, 'italic', false);
+                checkState(adminBtns.quote, 'blockquote', true);
+                checkState(adminBtns.list, 'insertUnorderedList', false);
+            }
+
+            adminEditor.addEventListener('mouseup', adminUpdateToolbar);
+            adminEditor.addEventListener('keyup', adminUpdateToolbar);
+            adminEditor.addEventListener('input', adminUpdateToolbar);
+        })();
+
+        init();
+    </script>
+
+    <!-- Rich Text Editor Styles -->
+    <style>
+        #adminDraftBody:empty:before { content: attr(placeholder); display: block; opacity: 0.2; }
+        #adminDraftBody:focus { outline: none; }
+        #adminDraftBody blockquote {
+            border-left: 3px solid #18eb9a;
+            padding-left: 24px;
+            font-style: italic;
+            opacity: 0.7;
+            margin: 20px 0;
+        }
+        #adminDraftBody ul { list-style-type: disc; padding-left: 20px; margin: 15px 0; }
+        #adminDraftBody p { margin: 0; }
+    </style>
+
+    <!-- LOADING REFRESH OVERLAY -->
+    <div id="refreshOverlay" class="fixed inset-0 z-[1000] bg-black/60 backdrop-blur-xl flex flex-col items-center justify-center opacity-0 pointer-events-none transition-all duration-500">
+        <div class="relative">
+            <div class="w-16 h-16 border-4 border-[#1DB954]/20 border-t-[#1DB954] rounded-full animate-spin"></div>
+            <div class="absolute inset-0 flex items-center justify-center">
+                 <img src="assets/Branch.png" class="w-6 h-6 animate-pulse">
+            </div>
+        </div>
+        <p class="text-[#1DB954] text-[10px] font-black uppercase tracking-[0.4em] mt-6 animate-pulse">Refreshing System</p>
+    </div>
+</body>
+
+</html>
